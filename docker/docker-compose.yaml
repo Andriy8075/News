@@ -1,0 +1,20 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+#      args:
+#        USER_ID: '${WWWUSER:-1000}'
+#        GROUP_ID: '${WWWGROUP:-1000}'
+#        USER: '${USER:-whoami}'
+    container_name: app
+    restart: always
+    working_dir: /var/www/
+    command: sh -c "
+      cd /var/www/backend
+      kill -USR2 1
+      "
+    ports:
+      - "9000:9000"
+    volumes:
+      - ../:/var/www
