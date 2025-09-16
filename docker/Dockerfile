@@ -26,5 +26,3 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | bash \
     && apt-get install nodejs -y
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-RUN sed -i 's|;chdir = /|chdir = /var/www/backend|' /usr/local/etc/php-fpm.d/www.conf
