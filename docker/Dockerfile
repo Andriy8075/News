@@ -20,9 +20,10 @@ RUN apt-get update && apt-get install -y \
     intl \
     zip \
     bcmath \
-    soap
+    soap \
+    telnet
 
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash \
+RUN curl -sL https://deb.nodesource.com/setup_22.x | bash \
     && apt-get install nodejs -y
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
