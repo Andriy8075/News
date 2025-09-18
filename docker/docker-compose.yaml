@@ -19,4 +19,15 @@ services:
       - "5173:5173"
     volumes:
       - ../:/var/www
-    command: php backend/artisan serve --host=0.0.0.0 --port=8000
+    command: ["sh", "./entrypoint.sh"]
+
+  db:
+    container_name: db
+    image: mysql:latest
+    volumes:
+      - ./storage/mysql:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
