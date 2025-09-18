@@ -1,25 +1,22 @@
+networks:
+  application:
+    driver: bridge
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
-#      args:
-#        USER_ID: '${WWWUSER:-1000}'
-#        GROUP_ID: '${WWWGROUP:-1000}'
-#        USER: '${USER:-whoami}'
     container_name: app
     restart: always
     working_dir: /var/www/
-#    command: sh -c "
-#      cd /var/www/backend
-#      kill -USR2 1
-#      "
     ports:
       - "8000:8000"
       - "5173:5173"
     volumes:
       - ../:/var/www
     command: ["sh", "./docker/entrypoint.sh"]
+    networks:
+      - application
 
   db:
     container_name: db
@@ -29,5 +26,8 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: news
+    networks:
+      - application
     ports:
       - "3306:3306"
