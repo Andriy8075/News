@@ -1,14 +1,15 @@
 #!/bin/sh
 
-if [ ! -f /var/www/.first_run_done ]; then
+if [ ! -f /var/www/docker/.first_run_done ]; then
   echo "First run detected – running setup commands..."
   # Run commands only on first build
+  cd /www/var/backend
   composer install
   cp .env.example .env
   php artisan key:generate
   php artisan storage:link
   npm install --prefix frontend
-  touch /var/www/.first_run_done
+  touch /var/www/docker/.first_run_done
 fi
 
 echo "Starting servers..."
