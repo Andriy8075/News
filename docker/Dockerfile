@@ -20,8 +20,7 @@ RUN apt-get update && apt-get install -y \
     intl \
     zip \
     bcmath \
-    soap \
-    telnet
+    soap
 
 RUN curl -sL https://deb.nodesource.com/setup_22.x | bash \
     && apt-get install nodejs -y
