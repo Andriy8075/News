@@ -17,17 +17,25 @@ services:
     command: ["sh", "./docker/entrypoint.sh"]
     networks:
       - application
+    depends_on:
+      db:
+        condition: service_healthy
 
   db:
-    container_name: db
-    image: mysql:latest
-    volumes:
-      - ./storage/mysql:/var/lib/mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: news
-    networks:
-      - application
+    image: mysql:8.0
     ports:
       - "3306:3306"
+    volumes:
+      - ./storage/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=news
+    networks:
+      - application
+    container_name: db
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -u root -proot || exit 1" ]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
