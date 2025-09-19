@@ -8,6 +8,8 @@ if [ ! -f /var/www/backend/.env ]; then
 fi
 php artisan key:generate
 php artisan storage:link
+php artisan migrate
+
 cd ../frontend || exit 1
 npm install
 cd ..
