@@ -1,6 +1,5 @@
 #!/bin/sh
 
-# Run commands only on first build
 cd /var/www/backend || exit 1
 composer install
 if [ ! -f /var/www/backend/.env ]; then
