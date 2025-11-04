@@ -1,0 +1,144 @@
+.create-news {
+  padding: 2vw 0;
+
+  .container {
+    width: 90%;
+    max-width: 80vw;
+    margin: 0 auto;
+  }
+
+  .page-title {
+    text-align: center;
+    font-size: 3.5vw;
+    font-weight: 700;
+    margin-bottom: 2vw;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .news-form {
+    background: white;
+    padding: 2.5vw;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+
+    .form-group {
+      margin-bottom: 2vw;
+
+      label {
+        display: block;
+        margin-bottom: 0.8vw;
+        font-weight: 600;
+        color: #4a5568;
+        font-size: 1.2vw;
+      }
+
+      input, textarea, select {
+        width: 100%;
+        padding: 1.2vw;
+        border: 0.2vw solid #e2e8f0;
+        border-radius: 1.2vw;
+        font-size: 1.2vw;
+        transition: var(--transition);
+        background: white;
+
+        &:focus {
+          outline: none;
+          border-color: #667eea;
+          box-shadow: 0 0 0 0.3vw rgba(102, 126, 234, 0.1);
+        }
+
+        &::placeholder {
+          color: var(--text-light);
+        }
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 10vw;
+      }
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5vw;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1.5vw;
+      justify-content: flex-end;
+      margin-top: 2.5vw;
+      padding-top: 2.5vw;
+      border-top: 0.1vw solid #e2e8f0;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+      }
+
+      button {
+        padding: 1.2vw 2.5vw;
+        border: none;
+        border-radius: 1.2vw;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        font-size: 1.2vw;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .create-news {
+    padding: 4vw 0;
+
+    .page-title {
+      font-size: 6vw;
+      margin-bottom: 4vw;
+    }
+
+    .news-form {
+      padding: 4vw;
+      border-radius: 3vw;
+
+      .form-group {
+        margin-bottom: 4vw;
+
+        label {
+          font-size: 3.5vw;
+          margin-bottom: 1.5vw;
+        }
+
+        input, textarea, select {
+          padding: 3vw;
+          border-radius: 3vw;
+          font-size: 3.5vw;
+          border-width: 0.5vw;
+        }
+
+        textarea {
+          min-height: 20vw;
+        }
+      }
+
+      .form-actions {
+        margin-top: 4vw;
+        padding-top: 4vw;
+
+        button {
+          padding: 3vw;
+          border-radius: 3vw;
+          font-size: 3.5vw;
+        }
+      }
+    }
+  }
+}
