@@ -12,7 +12,7 @@ class News extends Model
         'content',
         'image',
         'category',
-        'author',
+        'user_id',
         'date',
         'views',
         'likes',
@@ -27,5 +27,10 @@ class News extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'news_tags');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -11,13 +11,37 @@ class NewsController extends Controller
 {
     public function index(Request $request) {
         // more complicated logic with AI feed expected in real project
-        $news = News::latest()->take(9)->get();
+        $news = News::latest()->take(config('models.news.feed_count'))->get();
 
         return view('news.index', compact('news'));
     }
 
     public function show(Request $request, $id) {
+        $news = News::with(['tags', 'user'])->findOrFail($id);
 
+        // Increment views counter
+        $news->increment('views');
+
+        // Format response to match frontend expectations
+        $response = [
+            'id' => $news->id,
+            'title' => $news->title,
+            'excerpt' => $news->excerpt,
+            'content' => $news->content,
+            'image' => $news->image 
+                ? asset('storage/news_preview_images/' . $news->image)
+                : null,
+            'category' => $news->category,
+            'author' => $news->user ? $news->user->name : 'Unknown author',
+            'date' => $news->date instanceof \Carbon\Carbon 
+                ? $news->date->format('Y-m-d') 
+                : ($news->date ? (string) $news->date : null),
+            'views' => $news->views,
+            'likes' => $news->likes,
+            'tags' => $news->tags->pluck('name')->toArray(),
+        ];
+
+        return response()->json($response);
     }
 
     public function store(Request $request) {
@@ -29,13 +53,12 @@ class NewsController extends Controller
             'content' => 'required|string|max:' . $maxLengths['content'],
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'category' => 'required|string|exists:categories,name',
-            'author' => 'nullable|string|max:' . $maxLengths['author'],
             'tags' => 'nullable|array|max:' . $maxLengths['tags'],
             'tags.*' => 'string|max:' . $maxLengths['tag'],
         ]);
 
         // Set default values
-        $validated['author'] = $validated['author'] ?? 'Anonymous author';
+        $validated['user_id'] = auth()->id();
         $validated['date'] = now()->format('Y-m-d');
         $validated['views'] = 0;
         $validated['likes'] = 0;
