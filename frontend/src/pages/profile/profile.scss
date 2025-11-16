@@ -1,0 +1,151 @@
+.profile {
+  padding: 2vw 0;
+
+  .container {
+    width: 90%;
+    max-width: 100vw;
+    margin: 0 auto;
+  }
+
+  .page-title {
+    text-align: center;
+    font-size: 3.5vw;
+    font-weight: 700;
+    margin-bottom: 2vw;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .profile-layout {
+    display: grid;
+    grid-template-columns: 30vw 1fr;
+    gap: 2.5vw;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .profile-sidebar {
+    .tab-button {
+      width: 100%;
+      padding: 1.5vw 2vw;
+      border: none;
+      background: white;
+      text-align: left;
+      font-size: 1.3vw;
+      font-weight: 500;
+      border-radius: var(--border-radius);
+      margin-bottom: 1vw;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadow);
+
+      &:hover {
+        transform: translateY(-0.2vw);
+        box-shadow: var(--shadow-hover);
+      }
+
+      &.active {
+        background: var(--primary-gradient);
+        color: white;
+      }
+    }
+  }
+
+  .profile-content {
+    background: white;
+    padding: 2.5vw;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+
+    h2 {
+      font-size: 2.2vw;
+      margin-bottom: 2vw;
+      color: var(--text-primary);
+    }
+
+    .profile-form {
+      .form-group {
+        margin-bottom: 2vw;
+
+        label {
+          display: block;
+          margin-bottom: 0.8vw;
+          font-weight: 600;
+          color: #4a5568;
+          font-size: 1.2vw;
+        }
+
+        input {
+          width: 100%;
+          padding: 1.2vw;
+          border: 0.2vw solid #e2e8f0;
+          border-radius: 1.2vw;
+          font-size: 1.2vw;
+          transition: var(--transition);
+
+          &:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.3vw rgba(102, 126, 234, 0.1);
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .profile {
+    padding: 4vw 0;
+
+    .page-title {
+      font-size: 6vw;
+      margin-bottom: 4vw;
+    }
+
+    .profile-layout {
+      gap: 4vw;
+    }
+
+    .profile-sidebar {
+      .tab-button {
+        padding: 3vw 4vw;
+        font-size: 3.5vw;
+        border-radius: 3vw;
+        margin-bottom: 2vw;
+      }
+    }
+
+    .profile-content {
+      padding: 4vw;
+      border-radius: 3vw;
+
+      h2 {
+        font-size: 5vw;
+        margin-bottom: 4vw;
+      }
+
+      .profile-form {
+        .form-group {
+          margin-bottom: 4vw;
+
+          label {
+            font-size: 3.5vw;
+            margin-bottom: 1.5vw;
+          }
+
+          input {
+            padding: 3vw;
+            border-radius: 3vw;
+            font-size: 3.5vw;
+            border-width: 0.5vw;
+          }
+        }
+      }
+    }
+  }
+}

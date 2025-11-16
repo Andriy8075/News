@@ -1,0 +1,84 @@
+// Змінні
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --secondary-color: #f8f9fa;
+  --text-primary: #2d3748;
+  --text-secondary: #718096;
+  --text-light: #9ca3af;
+  --border-radius: 1.2vw;
+  --shadow: 0 0.4vw 2vw rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 1.2vw 3.5vw rgba(0, 0, 0, 0.15);
+  --transition: all 0.3s ease;
+}
+
+// Базові стилі
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--secondary-color);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.main-content {
+  padding: 2vw 0;
+}
+
+.container {
+  width: 90%;
+  max-width: 120vw;
+  margin: 0 auto;
+}
+
+// Утиліти
+.btn-primary {
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  padding: 1vw 2vw;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  
+  &:hover {
+    transform: translateY(-0.2vw);
+    box-shadow: 0 0.6vw 2vw rgba(102, 126, 234, 0.4);
+  }
+}
+
+.btn-secondary {
+  background: #e2e8f0;
+  color: #4a5568;
+  border: none;
+  padding: 1vw 2vw;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  
+  &:hover {
+    background: #cbd5e0;
+    transform: translateY(-0.2vw);
+  }
+}
+
+// Адаптивність
+@media (max-width: 768px) {
+  :root {
+    --border-radius: 3vw;
+  }
+  
+  .container {
+    width: 95%;
+  }
+}

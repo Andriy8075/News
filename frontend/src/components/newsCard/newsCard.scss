@@ -1,0 +1,143 @@
+.news-card {
+  background: white;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  break-inside: avoid;
+  margin-bottom: 2vw;
+
+  &:hover {
+    transform: translateY(-0.8vw);
+    box-shadow: var(--shadow-hover);
+  }
+
+  &-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .news-image-container {
+    position: relative;
+    overflow: hidden;
+    height: 25vw;
+
+    .news-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .news-category {
+      position: absolute;
+      top: 1.2vw;
+      left: 1.2vw;
+      background: var(--primary-gradient);
+      color: white;
+      padding: 0.8vw 1.5vw;
+      border-radius: 1.5vw;
+      font-size: 1vw;
+      font-weight: 600;
+    }
+
+    &:hover .news-image {
+      transform: scale(1.1);
+    }
+  }
+
+  .news-content {
+    padding: 2vw;
+
+    .news-title {
+      font-size: 1.5vw;
+      font-weight: 700;
+      margin-bottom: 1vw;
+      line-height: 1.4;
+      color: var(--text-primary);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .news-excerpt {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.5vw;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-size: 1.1vw;
+    }
+
+    .news-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5vw;
+      font-size: 1vw;
+
+      .news-author {
+        color: #4a5568;
+        font-weight: 500;
+      }
+
+      .news-date {
+        color: var(--text-light);
+      }
+    }
+
+    .news-stats {
+      display: flex;
+      gap: 1.5vw;
+      font-size: 1vw;
+      color: var(--text-light);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .news-card {
+    margin-bottom: 4vw;
+    border-radius: 3vw;
+
+    .news-image-container {
+      height: 50vw;
+
+      .news-category {
+        top: 2vw;
+        left: 2vw;
+        padding: 1.5vw 3vw;
+        border-radius: 3vw;
+        font-size: 2.5vw;
+      }
+    }
+
+    .news-content {
+      padding: 4vw;
+
+      .news-title {
+        font-size: 4vw;
+        margin-bottom: 2vw;
+      }
+
+      .news-excerpt {
+        font-size: 3vw;
+        margin-bottom: 3vw;
+      }
+
+      .news-meta {
+        font-size: 2.5vw;
+        margin-bottom: 3vw;
+      }
+
+      .news-stats {
+        font-size: 2.5vw;
+        gap: 3vw;
+      }
+    }
+  }
+}
