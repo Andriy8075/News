@@ -37,8 +37,9 @@ class NewsController extends Controller
                 ? $news->date->format('Y-m-d') 
                 : ($news->date ? (string) $news->date : null),
             'views' => $news->views,
-            'likes' => $news->likes,
+            'likes' => $news->likes()->count(), // requires rewriting to decrease database load
             'tags' => $news->tags->pluck('name')->toArray(),
+            'liked' => $news->likes()->where('user_id', auth()->id())->exists(),
         ];
 
         return response()->json($response);
@@ -51,9 +52,9 @@ class NewsController extends Controller
             'title' => 'required|string|max:' . $maxLengths['title'],
             'excerpt' => 'required|string|max:' . $maxLengths['excerpt'],
             'content' => 'required|string|max:' . $maxLengths['content'],
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:' . config('models.news.validation.preview_image_max_size'),
             'category' => 'required|string|exists:categories,name',
-            'tags' => 'nullable|array|max:' . $maxLengths['tags'],
+            'tags' => 'nullable|array|max:' . config('models.news.tags_max_count'),
             'tags.*' => 'string|max:' . $maxLengths['tag'],
         ]);
 

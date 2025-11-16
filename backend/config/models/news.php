@@ -2,7 +2,9 @@
 
 return [
     "feed_count" => 9,
-    
+    "preview_image_max_size" => 5120,
+    "tags_max_count" => 10,
+
     "validation" => [
         "max_lengths" => [
             "title" => 255,
@@ -10,7 +12,6 @@ return [
             "image" => 500,
             "author" => 255,
             "tag" => 50,
-            "tags" => 10,
             "content" => 10000,
         ],
     ],

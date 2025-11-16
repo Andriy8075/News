@@ -47,4 +47,20 @@ class User extends Authenticatable
             'editor' => 'boolean',
         ];
     }
+
+    /**
+     * Get all news created by this user.
+     */
+    public function news()
+    {
+        return $this->hasMany(News::class);
+    }
+
+    /**
+     * Get all news items this user has liked.
+     */
+    public function likedNews()
+    {
+        return $this->belongsToMany(News::class, 'news_user_likes');
+    }
 }

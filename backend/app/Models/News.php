@@ -33,4 +33,9 @@ class News extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'news_user_likes');
+    }
 }
