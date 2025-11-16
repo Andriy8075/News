@@ -16,13 +16,16 @@ class News extends Model
         'date',
         'views',
         'likes',
-        'tags',
     ];
 
     protected $casts = [
-        'tags' => 'array',
         'date' => 'date',
         'views' => 'integer',
         'likes' => 'integer',
     ];
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'news_tags');
+    }
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\News;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -17,11 +16,9 @@ class CategoryController extends Controller
 
         $category = Category::create([
             'name' => $validated['name'],
-            'slug' => Str::slug($validated['name']),
         ]);
 
         return response()->json([
-            'message' => 'Категорію успішно створено',
             'data' => $category
         ], 201);
     }
@@ -32,10 +29,10 @@ class CategoryController extends Controller
 
         // Check if category is being used by any news
         $newsCount = News::where('category', $category->name)->count();
-        
+
         if ($newsCount > 0) {
             return response()->json([
-                'message' => 'Неможливо видалити категорію, оскільки вона використовується в ' . $newsCount . ' новинах',
+                'message' => 'Cannot delete category because it is used in ' . $newsCount . ' news items',
                 'error' => 'category_in_use'
             ], 422);
         }
@@ -43,7 +40,7 @@ class CategoryController extends Controller
         $category->delete();
 
         return response()->json([
-            'message' => 'Категорію успішно видалено'
+            'message' => 'Category deleted successfully'
         ], 200);
     }
 }
