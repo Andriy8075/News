@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './createNews.scss';
+import { getCsrfToken } from '../../utils/api';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const CreateNews = () => {
   const navigate = useNavigate();
@@ -26,6 +29,8 @@ const CreateNews = () => {
 
   const [newCategory, setNewCategory] = useState('');
   const [showAddCategory, setShowAddCategory] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -92,13 +97,72 @@ const CreateNews = () => {
     setShowAddCategory(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
+    setIsSubmitting(true);
 
+    const token = getCsrfToken();
+
+    // Prepare FormData for file upload
+    const formDataToSend = new FormData();
+    formDataToSend.append('title', formData.title);
+    formDataToSend.append('excerpt', formData.excerpt);
+    formDataToSend.append('content', formData.content);
+    formDataToSend.append('category', formData.category);
     
+    // Add image if selected
+    if (formData.imageFile) {
+      formDataToSend.append('image', formData.imageFile);
+    }
 
-    alert('Новину успішно створено!');
-    navigate('/');
+    // Parse tags from comma-separated string to array
+    if (formData.tags.trim()) {
+      const tagsArray = formData.tags
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag.length > 0);
+      
+      tagsArray.forEach(tag => {
+        formDataToSend.append('tags[]', tag);
+      });
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/news/store`, {
+        method: 'POST',
+        body: formDataToSend,
+        headers: {
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-XSRF-TOKEN': token,
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        alert('Новину успішно створено!');
+        navigate('/');
+      } else {
+        // Handle validation errors (422 status)
+        if (response.status === 422) {
+          const errorData = await response.json();
+          if (errorData.errors) {
+            setErrors(errorData.errors);
+          } else {
+            setErrors({ general: ['Помилка валідації'] });
+          }
+        } else {
+          setErrors({ general: ['Помилка при створенні новини!'] });
+        }
+      }
+    } catch (error) {
+      console.error('Error creating news:', error);
+      setErrors({ general: ['Помилка підключення до сервера'] });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -107,6 +171,12 @@ const CreateNews = () => {
         <h1 className="page-title">✨ Створити новину</h1>
 
         <form onSubmit={handleSubmit} className="news-form">
+          {errors.general && (
+            <div className="error-message">
+              {Array.isArray(errors.general) ? errors.general[0] : errors.general}
+            </div>
+          )}
+
           <div className="form-group">
             <label htmlFor="title">Заголовок *</label>
             <input
@@ -117,7 +187,13 @@ const CreateNews = () => {
               onChange={handleChange}
               placeholder="Введіть заголовок новини"
               required
+              className={errors.title ? 'error' : ''}
             />
+            {errors.title && (
+              <span className="field-error">
+                {Array.isArray(errors.title) ? errors.title[0] : errors.title}
+              </span>
+            )}
           </div>
 
           <div className="form-group">
@@ -130,7 +206,13 @@ const CreateNews = () => {
               placeholder="Короткий опис новини"
               rows="3"
               required
+              className={errors.excerpt ? 'error' : ''}
             />
+            {errors.excerpt && (
+              <span className="field-error">
+                {Array.isArray(errors.excerpt) ? errors.excerpt[0] : errors.excerpt}
+              </span>
+            )}
           </div>
 
           <div className="form-group">
@@ -143,7 +225,13 @@ const CreateNews = () => {
               placeholder="Повний текст новини"
               rows="10"
               required
+              className={errors.content ? 'error' : ''}
             />
+            {errors.content && (
+              <span className="field-error">
+                {Array.isArray(errors.content) ? errors.content[0] : errors.content}
+              </span>
+            )}
           </div>
 
           <div className="form-row">
@@ -155,6 +243,7 @@ const CreateNews = () => {
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
+                  className={errors.category ? 'error' : ''}
                 >
                   {categories.map(cat => (
                     <option key={cat.value} value={cat.value}>
@@ -187,6 +276,11 @@ const CreateNews = () => {
                     Зберегти
                   </button>
                 </div>
+              )}
+              {errors.category && (
+                <span className="field-error">
+                  {Array.isArray(errors.category) ? errors.category[0] : errors.category}
+                </span>
               )}
             </div>
 
@@ -228,8 +322,8 @@ const CreateNews = () => {
             >
               Скасувати
             </button>
-            <button type="submit" className="btn-primary">
-              Опублікувати новину
+            <button type="submit" className="btn-primary" disabled={isSubmitting}>
+              {isSubmitting ? 'Публікація...' : 'Опублікувати новину'}
             </button>
           </div>
         </form>
