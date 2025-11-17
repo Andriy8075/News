@@ -43,6 +43,17 @@
     }
 
     .auth-form {
+      .error-message {
+        background-color: #fee;
+        border: 0.2vw solid #fcc;
+        color: #c33;
+        padding: 1vw;
+        border-radius: 1.2vw;
+        margin-bottom: 2vw;
+        font-size: 1.1vw;
+        text-align: center;
+      }
+
       .form-group {
         margin-bottom: 2vw;
 
@@ -68,9 +79,26 @@
             box-shadow: 0 0 0 0.3vw rgba(102, 126, 234, 0.1);
           }
 
+          &.error {
+            border-color: #e53e3e;
+            
+            &:focus {
+              border-color: #e53e3e;
+              box-shadow: 0 0 0 0.3vw rgba(229, 62, 62, 0.1);
+            }
+          }
+
           &::placeholder {
             color: var(--text-light);
           }
+        }
+
+        .field-error {
+          display: block;
+          color: #e53e3e;
+          font-size: 1vw;
+          margin-top: 0.5vw;
+          font-weight: 500;
         }
       }
 
@@ -139,6 +167,14 @@
       }
 
       .auth-form {
+        .error-message {
+          padding: 2vw;
+          border-radius: 3vw;
+          font-size: 3vw;
+          margin-bottom: 4vw;
+          border-width: 0.5vw;
+        }
+
         .form-group {
           margin-bottom: 4vw;
 
@@ -152,6 +188,11 @@
             border-radius: 3vw;
             font-size: 3.5vw;
             border-width: 0.5vw;
+          }
+
+          .field-error {
+            font-size: 3vw;
+            margin-top: 1vw;
           }
         }
 
