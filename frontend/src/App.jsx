@@ -6,6 +6,8 @@ import NewsDetail from './pages/newsDetails/newsDetails';
 import CreateNews from './pages/createNews/createNews';
 import Profile from './pages/profile/profile';
 import './styles/main.scss';
+import Register from './pages/auth/register';
+import Login from './pages/auth/login';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
             <Route path="/news/:id" element={<NewsDetail />} />
             <Route path="/create" element={<CreateNews />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </main>
       </div>

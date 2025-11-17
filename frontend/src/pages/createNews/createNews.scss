@@ -35,7 +35,9 @@
         font-size: 1.2vw;
       }
 
-      input, textarea, select {
+      input,
+      textarea,
+      select {
         width: 100%;
         padding: 1.2vw;
         border: 0.2vw solid #e2e8f0;
@@ -58,6 +60,63 @@
       textarea {
         resize: vertical;
         min-height: 10vw;
+      }
+
+      .category-row {
+        display: flex;
+        gap: 1vw;
+        align-items: center;
+
+        select {
+          flex: 1;
+        }
+
+        .btn-add-category {
+          /* вигляд як у btn-secondary, але менший розмір */
+          padding: 1.2vw 1.5vw;
+          font-size: 1.1vw;
+          border-radius: 1.2vw;
+          white-space: nowrap;
+
+          /* при hover – як кнопка "Опублікувати" */
+          &:hover {
+            background: var(--primary-gradient);
+            color: #fff;
+          }
+        }
+      }
+
+      .add-category {
+        margin-top: 1vw;
+        display: flex;
+        gap: 1vw;
+
+        input {
+          flex: 1;
+        }
+
+        .btn-small-primary {
+          padding: 1.2vw 2.5vw;
+          border-radius: 1.2vw;
+          font-size: 1.1vw;
+
+          &:hover {
+            background: var(--primary-gradient);
+            color: #fff;
+          }
+        }
+      }
+
+      .image-preview {
+        margin-top: 1vw;
+
+        img {
+          max-width: 100%;
+          max-height: 15vw;
+          border-radius: 1vw;
+          object-fit: cover;
+          border: 0.15vw solid #e2e8f0;
+        }
       }
     }
 
@@ -117,7 +176,9 @@
           margin-bottom: 1.5vw;
         }
 
-        input, textarea, select {
+        input,
+        textarea,
+        select {
           padding: 3vw;
           border-radius: 3vw;
           font-size: 3.5vw;
@@ -126,6 +187,32 @@
 
         textarea {
           min-height: 20vw;
+        }
+
+        .category-row {
+          .btn-add-category {
+            padding: 2.5vw 3vw;
+            border-radius: 3vw;
+            font-size: 3vw;
+          }
+        }
+
+        .add-category {
+          margin-top: 2vw;
+          flex-direction: column;
+
+          .btn-small-primary {
+            padding: 2.5vw 3vw;
+            border-radius: 3vw;
+            font-size: 3vw;
+          }
+        }
+
+        .image-preview {
+          img {
+            max-height: 35vw;
+            border-radius: 3vw;
+          }
         }
       }
 
