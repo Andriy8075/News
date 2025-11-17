@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'editor',
     ];
 
     /**
@@ -43,6 +44,23 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'editor' => 'boolean',
         ];
+    }
+
+    /**
+     * Get all news created by this user.
+     */
+    public function news()
+    {
+        return $this->hasMany(News::class);
+    }
+
+    /**
+     * Get all news items this user has liked.
+     */
+    public function likedNews()
+    {
+        return $this->belongsToMany(News::class, 'news_user_likes');
     }
 }

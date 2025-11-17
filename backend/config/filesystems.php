@@ -47,6 +47,15 @@ return [
             'report' => false,
         ],
 
+        'news_preview_images' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/news_preview_images'),
+            'url' => env('APP_URL').'/news_preview_images',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
