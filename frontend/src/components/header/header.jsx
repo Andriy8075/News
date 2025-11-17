@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './header.scss';
+import { data } from '../../data';
 
 const Header = () => {
   const location = useLocation();
@@ -19,18 +20,22 @@ const Header = () => {
           >
             🏠 Головна
           </Link>
-          <Link 
-            to="/create" 
-            className={`nav-link ${location.pathname === '/create' ? 'active' : ''}`}
-          >
-            ✨ Створити
-          </Link>
-          <Link 
-            to="/profile" 
-            className={`nav-link ${location.pathname === '/profile' ? 'active' : ''}`}
-          >
-            👤 Профіль
-          </Link>
+          {data.user?.editor && (
+            <Link 
+              to="/create" 
+              className={`nav-link ${location.pathname === '/create' ? 'active' : ''}`}
+            >
+              ✨ Створити
+            </Link>
+          )}
+          {data.user && (
+            <Link 
+              to="/profile" 
+              className={`nav-link ${location.pathname === '/profile' ? 'active' : ''}`}
+            >
+              👤 Профіль
+            </Link>
+          )}
         </nav>
       </div>
     </header>

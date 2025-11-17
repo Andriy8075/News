@@ -22,7 +22,6 @@ const Login = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error for this field when user starts typing
     if (errors[name]) {
       setErrors(prev => {
         const newErrors = { ...prev };
@@ -34,7 +33,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({}); // Clear previous errors
+    setErrors({});
 
     const token = getCsrfToken();
 
@@ -52,14 +51,12 @@ const Login = () => {
       });
 
       if (response.ok) {
-        // Login successful
         const responseData = await response.json();
         if (responseData.user) {
           data.user = responseData.user;
         }
         navigate('/');
       } else {
-        // Handle validation errors (422 status)
         if (response.status === 422) {
           const errorData = await response.json();
           if (errorData.errors) {

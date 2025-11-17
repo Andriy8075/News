@@ -36,8 +36,11 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return response()->json([
+        $toReturn = [
             'user' => $user,
-        ], 201);
+        ];
+        $toReturn['user']['editor'] = false;
+
+        return response()->json($toReturn, 201);
     }
 }
