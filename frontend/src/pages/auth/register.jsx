@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './auth.scss';
 import { getCsrfToken } from '../../utils/api';
-import { data } from '../../data';
+import { useUser } from '../../context/UserContext';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 const Register = () => {
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -68,7 +69,7 @@ const Register = () => {
 
       if (response.ok) {
         const responseData = await response.json();
-         data.user = responseData.user;
+        setUser(responseData.user ?? null);
         navigate('/');
       } else {
         // Handle validation errors (422 status)

@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './auth.scss';
 import { getCsrfToken } from '../../utils/api';
-import { data } from '../../data';
+import { useUser } from '../../context/UserContext';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 const Login = () => {
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -53,7 +54,9 @@ const Login = () => {
       if (response.ok) {
         const responseData = await response.json();
         if (responseData.user) {
-          data.user = responseData.user;
+          setUser(responseData.user);
+        } else {
+          setUser(null);
         }
         navigate('/');
       } else {
