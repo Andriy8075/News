@@ -65,8 +65,7 @@ export async function fetchUser() {
   })
   if (response.ok) {
     const responseData = await response.json();
-    data.user = responseData.user;
-    return data.user;
+    return responseData.user;
   } else {
     console.error('Failed to fetch user:', response.status);
     return null;

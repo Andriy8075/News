@@ -8,7 +8,7 @@ import { fetchUser } from '../../utils/api';
 
 const Header = () => {
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(undefined);
   useEffect(() => {
     fetchUser().then(setUser);
   }, []);
@@ -17,10 +17,11 @@ const Header = () => {
   return (
     <header className="header">
       <div className="header-container">
-        <Link to="/" className="logo">
-          📰 NewsHub
-        </Link>
-        
+        {user!==undefined && (
+          <Link to="/" className="logo">
+            📰 NewsHub
+          </Link>
+        )}
         <nav className="nav">
           <Link 
             to="/" 
