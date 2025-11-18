@@ -1,39 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './auth.scss';
-import { getCsrfToken } from '../../utils/api';
 import { useUser } from '../../context/UserContext';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+import { useAuthForm } from '../../hooks/useAuthForm';
+import { makeAuthRequest } from './makeAuthRequest';
 
 const Register = () => {
   const navigate = useNavigate();
   const { setUser } = useUser();
 
-  const [formData, setFormData] = useState({
+  const {
+    formData,
+    handleChange,
+    errors,
+    setErrors,
+  } = useAuthForm({
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
-
-  const [errors, setErrors] = useState({});
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Clear error for this field when user starts typing
-    if (errors[name]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,28 +30,14 @@ const Register = () => {
       return;
     }
 
-    const token = getCsrfToken();
-
-    // Prepare data for backend - Laravel expects password_confirmation, not confirmPassword
     const submitData = {
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
+      ...formData,
       password_confirmation: formData.confirmPassword,
     };
+    delete submitData.confirmPassword;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/register`, {
-        method: 'POST',
-        body: JSON.stringify(submitData),
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-          'X-XSRF-TOKEN': token 
-        },
-        credentials: 'include',
-      });
+        const response = await makeAuthRequest('register', submitData);
 
       if (response.ok) {
         const responseData = await response.json();

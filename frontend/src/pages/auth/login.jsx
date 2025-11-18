@@ -1,55 +1,31 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './auth.scss';
 import { getCsrfToken } from '../../utils/api';
 import { useUser } from '../../context/UserContext';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+import { useAuthForm } from '../../hooks/useAuthForm';
+import { makeAuthRequest } from './makeAuthRequest';
 
 const Login = () => {
   const navigate = useNavigate();
   const { setUser } = useUser();
 
-  const [formData, setFormData] = useState({
+  const {
+    formData,
+    setErrors,
+    errors,
+    handleChange,
+  } = useAuthForm({
     email: '',
-    password: ''
+    password: '',
   });
-
-  const [errors, setErrors] = useState({});
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    if (errors[name]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
 
-    const token = getCsrfToken();
-
     try {
-      const response = await fetch(`${API_BASE_URL}/login`, {
-        method: 'POST',
-        body: JSON.stringify(formData),
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-          'X-XSRF-TOKEN': token 
-        },
-        credentials: 'include',
-      });
+      const response = await makeAuthRequest('login', formData);
 
       if (response.ok) {
         const responseData = await response.json();
