@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './auth.scss';
-import { getCsrfToken } from '../../utils/api';
+import { getCsrfTokenFromCookie } from '../../utils/api';
 import { useUser } from '../../context/UserContext';
 import { useAuthForm } from '../../hooks/useAuthForm';
 import { makeAuthRequest } from './makeAuthRequest';

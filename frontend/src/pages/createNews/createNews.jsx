@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './createNews.scss';
-import { getCsrfToken } from '../../utils/api';
+import { getCsrfTokenFromCookie } from '../../utils/api';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -102,7 +102,7 @@ const CreateNews = () => {
     setErrors({});
     setIsSubmitting(true);
 
-    const token = getCsrfToken();
+    const token = getCsrfTokenFromCookie();
     console.log(token);
 
     // Prepare FormData for file upload
