@@ -10,14 +10,8 @@ import Register from './pages/auth/register';
 import Login from './pages/auth/login';
 import EditNews from './pages/editNews/editNews';
 import MyNews from './pages/myNews/myNews';
-import { fetchCsrfToken } from './utils/api';
 
 function App() {
-  useEffect(() => {
-    // Fetch CSRF token on application startup
-    fetchCsrfToken()
-  }, []);
-
   return (
     <Router>
       <div className="app">
