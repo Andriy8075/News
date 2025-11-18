@@ -9,7 +9,7 @@ Route::get('/user', function () {
     ]);
 });
 
-Route::post('/news/store', [NewsController::class, 'create'])->middleware('editor')->name('news.post');
+Route::post('/news/store', [NewsController::class, 'store'])->middleware('editor')->name('news.store');
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('news/{id}', [NewsController::class, 'show'])->name('news.show');
 

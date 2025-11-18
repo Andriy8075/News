@@ -103,6 +103,7 @@ const CreateNews = () => {
     setIsSubmitting(true);
 
     const token = getCsrfToken();
+    console.log(token);
 
     // Prepare FormData for file upload
     const formDataToSend = new FormData();
