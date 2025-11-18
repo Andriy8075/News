@@ -3,9 +3,17 @@ import { Link, useLocation } from 'react-router-dom';
 import './header.scss';
 import { data } from '../../data';
 
-const Header = () => {
-  const location = useLocation();
+import { useState, useEffect } from 'react';
+import { fetchUser } from '../../utils/api';
 
+const Header = () => {
+
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    fetchUser().then(setUser);
+  }, []);
+
+  const location = useLocation();
   return (
     <header className="header">
       <div className="header-container">
@@ -20,7 +28,7 @@ const Header = () => {
           >
             🏠 Головна
           </Link>
-          {data.user?.editor && (
+          {user?.editor && (
             <Link 
               to="/create" 
               className={`nav-link ${location.pathname === '/create' ? 'active' : ''}`}
@@ -28,7 +36,7 @@ const Header = () => {
               ✨ Створити
             </Link>
           )}
-          {data.user && (
+          {user && (
             <Link 
               to="/profile" 
               className={`nav-link ${location.pathname === '/profile' ? 'active' : ''}`}

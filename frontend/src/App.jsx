@@ -8,13 +8,19 @@ import Profile from './pages/profile/profile';
 import './styles/main.scss';
 import Register from './pages/auth/register';
 import Login from './pages/auth/login';
-import { fetchCsrfToken } from './utils/api';
+import { fetchCsrfToken, fetchUser } from './utils/api';
 
 function App() {
   useEffect(() => {
     // Fetch CSRF token on application startup
     fetchCsrfToken()
   }, []);
+
+  (async () => {
+    const user = await fetchUser();
+    console.log(user);
+  })();
+  // fetch user or get it from local storage or cache
 
   return (
     <Router>

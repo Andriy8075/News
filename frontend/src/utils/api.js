@@ -1,3 +1,5 @@
+import { data } from '../data';
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 let csrfToken = null;
 
@@ -19,6 +21,14 @@ function getCsrfTokenFromCookie() {
 }
 
 export async function fetchCsrfToken() {
+  // Check if token already exists in variable or in cookie - no need to fetch if it does
+  if (csrfToken) return csrfToken;
+  const tokneInCookie = getCsrfTokenFromCookie();
+  if (tokneInCookie) {
+    return tokneInCookie;
+  }
+
+  // Only fetch if token doesn't exist
   try {
     const response = await fetch(`${API_BASE_URL}/sanctum/csrf-cookie`, {
       method: 'GET',
@@ -47,6 +57,20 @@ export function getCsrfToken() {
     csrfToken = getCsrfTokenFromCookie();
   }
   return csrfToken;
+}
+
+export async function fetchUser() {
+  const response = await fetch(`${API_BASE_URL}/user`, {
+    credentials: 'include',
+  })
+  if (response.ok) {
+    const responseData = await response.json();
+    data.user = responseData.user;
+    return data.user;
+  } else {
+    console.error('Failed to fetch user:', response.status);
+    return null;
+  }
 }
 
 // /**
