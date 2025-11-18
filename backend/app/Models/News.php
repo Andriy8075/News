@@ -10,7 +10,7 @@ class News extends Model
         'title',
         'excerpt',
         'content',
-        'image',
+        'image_path',
         'category',
         'user_id',
         'date',
