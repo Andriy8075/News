@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\News;
 use App\Models\Tag;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\ValidationRules\News as NewsValidationRules;
 
 class NewsController extends Controller
 {
@@ -46,17 +48,9 @@ class NewsController extends Controller
     }
 
     public function store(Request $request) {
-        $maxLengths = config('models.news.validation.max_lengths');
+        $ValidationRules = NewsValidationRules::getRules();
 
-        $validated = $request->validate([
-            'title' => 'required|string|max:' . $maxLengths['title'],
-            'excerpt' => 'required|string|max:' . $maxLengths['excerpt'],
-            'content' => 'required|string|max:' . $maxLengths['content'],
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:' . config('models.news.validation.preview_image_max_size'),
-            'category' => 'required|string|exists:categories,name',
-            'tags' => 'nullable|array|max:' . config('models.news.validation.tags_max_count'),
-            'tags.*' => 'string|max:' . $maxLengths['tag'],
-        ]);
+        $validated = $request->validate($ValidationRules);
 
         // Set default values
         $validated['user_id'] = auth()->id();
@@ -79,6 +73,11 @@ class NewsController extends Controller
             $validated['image'] = $filename;
         } else {
             unset($validated['image']);
+        }
+
+        // Handle category - create if it doesn't exist
+        if (isset($validated['category'])) {
+            Category::firstOrCreate(['name' => $validated['category']]);
         }
 
         // Extract tags from validated data (if present)
