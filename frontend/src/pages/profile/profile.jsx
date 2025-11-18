@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './profile.scss';
 
 const Profile = () => {
+  const navigate = useNavigate();
+
   const [userData, setUserData] = useState({
     name: 'Іван Петренко',
     email: 'ivan@example.com',
@@ -23,13 +26,11 @@ const Profile = () => {
 
   const handleProfileSubmit = (e) => {
     e.preventDefault();
-    // Логіка оновлення профілю
     alert('Профіль оновлено!');
   };
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
-    // Логіка зміни паролю
     alert('Пароль змінено!');
     setUserData(prev => ({
       ...prev,
@@ -37,6 +38,17 @@ const Profile = () => {
       newPassword: '',
       confirmPassword: ''
     }));
+  };
+
+  const handleLogout = () => {
+    // тут буде реальна логіка логауту
+    alert('Ви вийшли з акаунту');
+    // наприклад: navigate('/login');
+  };
+
+  const handleGoToMyNews = () => {
+    // перехід на сторінку з особистими новинами
+    navigate('/my-news');
   };
 
   return (
@@ -57,6 +69,22 @@ const Profile = () => {
               onClick={() => setActiveTab('password')}
             >
               🔒 Зміна паролю
+            </button>
+
+            {/* Кнопка для переходу на сторінку особистих новин */}
+            <button 
+              className="tab-button"
+              onClick={handleGoToMyNews}
+            >
+              📰 Мої новини
+            </button>
+
+            {/* Кнопка логауту */}
+            <button 
+              className="tab-button logout-button"
+              onClick={handleLogout}
+            >
+              🚪 Вийти з акаунту
             </button>
           </div>
 
