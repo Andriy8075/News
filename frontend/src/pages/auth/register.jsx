@@ -1,36 +1,67 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './auth.scss';
+import { useUser } from '../../context/UserContext';
+import { useAuthForm } from '../../hooks/useAuthForm';
+import { makeAuthRequest } from './makeAuthRequest';
 
 const Register = () => {
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
-  const [formData, setFormData] = useState({
+  const {
+    formData,
+    handleChange,
+    errors,
+    setErrors,
+  } = useAuthForm({
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({}); // Clear previous errors
 
     if (formData.password !== formData.confirmPassword) {
-      alert('Паролі не співпадають!');
+      setErrors({ confirmPassword: ['Паролі не співпадають!'] });
       return;
     }
 
-    // Тут буде логіка реєстрації (запит до бекенду)
-    alert('Акаунт успішно створено!');
-    navigate('/login');
+    const submitData = {
+      ...formData,
+      password_confirmation: formData.confirmPassword,
+    };
+    delete submitData.confirmPassword;
+
+    try {
+        const response = await makeAuthRequest('register', submitData);
+
+      if (response.ok) {
+        const responseData = await response.json();
+        setUser(responseData.user ?? null);
+        navigate('/');
+      } else {
+        // Handle validation errors (422 status)
+        if (response.status === 422) {
+          const errorData = await response.json();
+          if (errorData.errors) {
+            setErrors(errorData.errors);
+          } else {
+            setErrors({ general: ['Помилка валідації'] });
+          }
+        } else {
+          console.log(response);
+          console.log(JSON.stringify(response.body));
+          setErrors({ general: ['Помилка при створенні акаунту!'] });
+        }
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      setErrors({ general: ['Помилка підключення до сервера'] });
+    }
   };
 
   return (
@@ -45,6 +76,12 @@ const Register = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
+            {errors.general && (
+              <div className="error-message">
+                {Array.isArray(errors.general) ? errors.general[0] : errors.general}
+              </div>
+            )}
+
             <div className="form-group">
               <label htmlFor="name">Ім'я та прізвище</label>
               <input
@@ -55,7 +92,13 @@ const Register = () => {
                 onChange={handleChange}
                 placeholder="Іван Петренко"
                 required
+                className={errors.name ? 'error' : ''}
               />
+              {errors.name && (
+                <span className="field-error">
+                  {Array.isArray(errors.name) ? errors.name[0] : errors.name}
+                </span>
+              )}
             </div>
 
             <div className="form-group">
@@ -68,7 +111,13 @@ const Register = () => {
                 onChange={handleChange}
                 placeholder="you@example.com"
                 required
+                className={errors.email ? 'error' : ''}
               />
+              {errors.email && (
+                <span className="field-error">
+                  {Array.isArray(errors.email) ? errors.email[0] : errors.email}
+                </span>
+              )}
             </div>
 
             <div className="form-group">
@@ -81,7 +130,13 @@ const Register = () => {
                 onChange={handleChange}
                 placeholder="Придумайте пароль"
                 required
+                className={errors.password ? 'error' : ''}
               />
+              {errors.password && (
+                <span className="field-error">
+                  {Array.isArray(errors.password) ? errors.password[0] : errors.password}
+                </span>
+              )}
             </div>
 
             <div className="form-group">
@@ -94,7 +149,17 @@ const Register = () => {
                 onChange={handleChange}
                 placeholder="Повторіть пароль"
                 required
+                className={errors.confirmPassword || errors.password_confirmation ? 'error' : ''}
               />
+              {(errors.confirmPassword || errors.password_confirmation) && (
+                <span className="field-error">
+                  {Array.isArray(errors.confirmPassword) 
+                    ? errors.confirmPassword[0] 
+                    : Array.isArray(errors.password_confirmation)
+                    ? errors.password_confirmation[0]
+                    : errors.confirmPassword || errors.password_confirmation}
+                </span>
+              )}
             </div>
 
             <div className="auth-actions">

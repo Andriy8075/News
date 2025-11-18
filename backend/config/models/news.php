@@ -2,10 +2,10 @@
 
 return [
     "feed_count" => 9,
-    "preview_image_max_size" => 5120,
-    "tags_max_count" => 10,
 
     "validation" => [
+        "preview_image_max_size" => 5120,
+        "tags_max_count" => 10,
         "max_lengths" => [
             "title" => 255,
             "excerpt" => 500,

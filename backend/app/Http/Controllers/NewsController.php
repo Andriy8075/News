@@ -54,7 +54,7 @@ class NewsController extends Controller
             'content' => 'required|string|max:' . $maxLengths['content'],
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:' . config('models.news.validation.preview_image_max_size'),
             'category' => 'required|string|exists:categories,name',
-            'tags' => 'nullable|array|max:' . config('models.news.tags_max_count'),
+            'tags' => 'nullable|array|max:' . config('models.news.validation.tags_max_count'),
             'tags.*' => 'string|max:' . $maxLengths['tag'],
         ]);
 
