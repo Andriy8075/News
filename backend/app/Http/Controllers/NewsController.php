@@ -13,9 +13,32 @@ class NewsController extends Controller
 {
     public function index(Request $request) {
         // more complicated logic with AI feed expected in real project
-        $news = News::latest()->take(config('models.news.feed_count'))->get();
+        $news = News::with(['tags', 'user'])
+            ->latest()
+            ->take(config('models.news.feed_count'))
+            ->get();
 
-        return view('news.index', compact('news'));
+        $response = $news->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'title' => $item->title,
+                'excerpt' => $item->excerpt,
+                'content' => $item->content,
+                'image' => $item->image_path 
+                    ? asset('storage/news_preview_images/' . $item->image_path)
+                    : null,
+                'category' => $item->category,
+                'author' => $item->user ? $item->user->name : 'Unknown author',
+                'date' => $item->date instanceof \Carbon\Carbon 
+                    ? $item->date->format('Y-m-d') 
+                    : ($item->date ? (string) $item->date : null),
+                'views' => $item->views,
+                'likes' => $item->likes()->count(),
+                'tags' => $item->tags->pluck('name')->toArray(),
+            ];
+        });
+
+        return response()->json($response);
     }
 
     public function show(Request $request, $id) {
