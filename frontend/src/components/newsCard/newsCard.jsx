@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './newsCard.scss';
 
-const NewsCard = ({ news }) => {
+const NewsCard = ({ news, onEdit, onDelete }) => {
   return (
     <div className="news-card">
       <Link to={`/news/${news.id}`} className="news-card-link">
@@ -30,6 +30,21 @@ const NewsCard = ({ news }) => {
             <span className="news-views">👁️ {news.views}</span>
             <span className="news-likes">❤️ {news.likes}</span>
           </div>
+
+          {(onEdit || onDelete) && (
+            <div className="news-actions">
+              {onEdit && (
+                <button className="edit-btn" onClick={(e) => { e.preventDefault(); onEdit(news.id); }}>
+                  ✏️ Редагувати
+                </button>
+              )}
+              {onDelete && (
+                <button className="delete-btn" onClick={(e) => { e.preventDefault(); onDelete(news.id); }}>
+                  🗑️ Видалити
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </Link>
     </div>

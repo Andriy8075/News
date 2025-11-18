@@ -29,6 +29,13 @@
   }
 
   .profile-sidebar {
+    .logout-button {
+      &:hover {
+        background: #fed7d7; // світло-червоний фон
+        color: #c53030;      // темно-червоний текст
+      }
+    }
+
     .tab-button {
       width: 100%;
       padding: 1.5vw 2vw;

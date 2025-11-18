@@ -8,6 +8,8 @@ import Profile from './pages/profile/profile';
 import './styles/main.scss';
 import Register from './pages/auth/register';
 import Login from './pages/auth/login';
+import EditNews from './pages/editNews/editNews';
+import MyNews from './pages/myNews/myNews';
 import { fetchCsrfToken } from './utils/api';
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/news/:id/edit" element={<EditNews />} />
+            <Route path="/my-news" element={<MyNews />} />
           </Routes>
         </main>
       </div>
