@@ -2,7 +2,6 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 export function getCsrfTokenFromCookie() {
   if (!document.cookie) {
-    console.log('no cookie');
     return null;
   }
 
@@ -11,11 +10,9 @@ export function getCsrfTokenFromCookie() {
     .filter(c => c.startsWith('XSRF-TOKEN='));
 
   if (xsrfCookies.length === 0) {
-    console.log('no xsrf cookie');
     return null;
   }
   const toReturn = decodeURIComponent(xsrfCookies[0].split('=')[1]);
-  console.log('toReturn', toReturn);
   return toReturn;
 }
 
