@@ -1,28 +1,56 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './auth.scss';
+import { getCsrfToken } from '../../utils/api';
+import { useUser } from '../../context/UserContext';
+import { useAuthForm } from '../../hooks/useAuthForm';
+import { makeAuthRequest } from './makeAuthRequest';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
-  const [formData, setFormData] = useState({
+  const {
+    formData,
+    setErrors,
+    errors,
+    handleChange,
+  } = useAuthForm({
     email: '',
-    password: ''
+    password: '',
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Тут буде логіка логіну (запит до бекенду)
-    alert('Вхід виконано!');
-    navigate('/');
+    setErrors({});
+
+    try {
+      const response = await makeAuthRequest('login', formData);
+
+      if (response.ok) {
+        const responseData = await response.json();
+        if (responseData.user) {
+          setUser(responseData.user);
+        } else {
+          setUser(null);
+        }
+        navigate('/');
+      } else {
+        if (response.status === 422) {
+          const errorData = await response.json();
+          if (errorData.errors) {
+            setErrors(errorData.errors);
+          } else {
+            setErrors({ general: ['Помилка валідації'] });
+          }
+        } else {
+          setErrors({ general: ['Помилка при вході! Перевірте дані.'] });
+        }
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setErrors({ general: ['Помилка підключення до сервера'] });
+    }
   };
 
   return (
@@ -37,6 +65,12 @@ const Login = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
+            {errors.general && (
+              <div className="error-message">
+                {Array.isArray(errors.general) ? errors.general[0] : errors.general}
+              </div>
+            )}
+
             <div className="form-group">
               <label htmlFor="email">Email адреса</label>
               <input
@@ -47,7 +81,13 @@ const Login = () => {
                 onChange={handleChange}
                 placeholder="you@example.com"
                 required
+                className={errors.email ? 'error' : ''}
               />
+              {errors.email && (
+                <span className="field-error">
+                  {Array.isArray(errors.email) ? errors.email[0] : errors.email}
+                </span>
+              )}
             </div>
 
             <div className="form-group">
@@ -60,7 +100,13 @@ const Login = () => {
                 onChange={handleChange}
                 placeholder="Введіть пароль"
                 required
+                className={errors.password ? 'error' : ''}
               />
+              {errors.password && (
+                <span className="field-error">
+                  {Array.isArray(errors.password) ? errors.password[0] : errors.password}
+                </span>
+              )}
             </div>
 
             <div className="auth-actions">

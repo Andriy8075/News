@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/header/header';
 import NewsFeed from './pages/newsFeed/newsFeed';
@@ -10,8 +10,14 @@ import Register from './pages/auth/register';
 import Login from './pages/auth/login';
 import EditNews from './pages/editNews/editNews';
 import MyNews from './pages/myNews/myNews';
+import { fetchCsrfToken } from './utils/api';
 
 function App() {
+  useEffect(() => {
+    // Fetch CSRF token on application startup
+    fetchCsrfToken()
+  }, []);
+
   return (
     <Router>
       <div className="app">
