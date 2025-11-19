@@ -118,6 +118,7 @@ const CreateNews = () => {
     }
 
     // Parse tags from comma-separated string to array
+    console.log(formData.tags);
     if (formData.tags.trim()) {
       const tagsArray = formData.tags
         .split(',')

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\ValidationRules\News as NewsValidationRules;
 use App\Converters\NewsConverter;
+use Illuminate\Support\Facades\Log;
 
 class NewsController extends Controller
 {
@@ -110,11 +111,19 @@ class NewsController extends Controller
         }
 
         $ValidationRules = NewsValidationRules::getRules();
+        Log::info('before validation');
+        Log::info('request->all()', $request->all());
+        Log::info('request->input()', $request->input());
+        Log::info('request->post()', $request->post());
+        Log::info('request->files->all()', $request->files->all());
         $validated = $request->validate($ValidationRules);
+        Log::info('after validation');
+        $validated['user_id'] = auth()->id();
+        $validated['date'] = now()->format('Y-m-d');
+        $validated['likes'] = $news->likes;
+        $validated['views'] = $news->views;
 
-        // Handle image file upload
         if ($request->hasFile('image')) {
-            // Delete old image if it exists
             if ($news->image_path) {
                 Storage::disk('public')->delete('news_preview_images/' . $news->image_path);
             }
@@ -132,9 +141,6 @@ class NewsController extends Controller
         // Extract tags from validated data
         $tagsInput = $validated['tags'] ?? null;
         unset($validated['tags']);
-
-        // Don't allow updating user_id, views, or likes through this endpoint
-        unset($validated['user_id'], $validated['views'], $validated['likes']);
 
         // Update news
         $news->update($validated);

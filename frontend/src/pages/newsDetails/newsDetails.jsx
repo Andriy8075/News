@@ -3,8 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import './newsDetails.scss';
 import { GETFetch } from '../../hooks/GETFetch';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
 const NewsDetail = () => {
   const { id } = useParams();
   const [news, setNews] = useState(null);
@@ -17,25 +15,6 @@ const NewsDetail = () => {
       } catch (err) {
         console.error('Error fetching news', err);
       }
-      // try {
-        
-      //   const response = await fetch(`${API_BASE_URL}/news/${id}`, {
-      //     method: 'GET',
-      //     credentials: 'include',
-      //     headers: {
-      //       'Accept': 'application/json',
-      //     },
-      //   });
-
-      //   if (response.ok) {
-      //     const data = await response.json();
-      //     setNews(data);
-      //   } else {
-      //     console.error('Failed to fetch news:', response.status);
-      //   }
-      // } catch (err) {
-      //   console.error('Error fetching news', err);
-      // }
     };
 
     fetchNews();
