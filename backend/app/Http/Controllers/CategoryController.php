@@ -12,8 +12,16 @@ class CategoryController extends Controller
     {
         $categories = Category::withCount('news')
             ->orderByDesc('news_count')
+            ->take(config('models.category.news_form_count'))
             ->get();
 
-        return response()->json($categories);
+        $response = $categories->map(function ($category) {
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+            ];
+        });
+
+        return response()->json($response);
     }
 }
