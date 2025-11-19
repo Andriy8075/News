@@ -1,14 +1,18 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const useNewsForm = (initialData = null) => {
-  const [categories, setCategories] = useState([
-    { value: 'technology', label: 'Технології' },
-    { value: 'politics', label: 'Політика' },
-    { value: 'sports', label: 'Спорт' },
-    { value: 'entertainment', label: 'Розваги' },
-    { value: 'science', label: 'Наука' },
-    { value: 'business', label: 'Бізнес' },
-  ]);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await fetch(API_BASE_URL + '/categories')
+      const data = await response.json()
+      setCategories(data)
+    }
+    fetchCategories()
+  }, [])
 
   const [formData, setFormData] = useState({
     title: initialData?.title || '',

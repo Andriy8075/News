@@ -1,9 +1,11 @@
 import React from 'react';
 import './newsForm.scss';
+import { useEffect, useState } from 'react';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const NewsForm = ({
-  formData,
   categories,
+  formData,
   newCategory,
   showAddCategory,
   errors,
@@ -18,6 +20,7 @@ const NewsForm = ({
   submitButtonText = 'Опублікувати новину',
   cancelButtonText = 'Скасувати',
 }) => {
+
   return (
     <form onSubmit={onSubmit} className="news-form">
       {errors.general && (
@@ -95,8 +98,8 @@ const NewsForm = ({
               className={errors.category ? 'error' : ''}
             >
               {categories.map(cat => (
-                <option key={cat.value} value={cat.value}>
-                  {cat.label}
+                <option key={cat.id} value={cat.name}>
+                  {cat.name}
                 </option>
               ))}
             </select>

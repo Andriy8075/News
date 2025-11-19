@@ -74,8 +74,8 @@ const EditNews = () => {
         <h1 className="page-title">✏️ Редагувати новину</h1>
 
         <NewsForm
-          formData={formData}
           categories={categories}
+          formData={formData}
           newCategory={newCategory}
           showAddCategory={showAddCategory}
           errors={errors}
