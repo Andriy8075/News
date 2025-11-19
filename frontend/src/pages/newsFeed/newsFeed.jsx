@@ -27,7 +27,6 @@ const NewsFeed = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log('data', data);
           setNews(data);
           setFilteredNews(data);
         } else {
@@ -36,7 +35,7 @@ const NewsFeed = () => {
         }
       } catch (err) {
         setError('Помилка підключення до сервера');
-        console.error('Error fetching news:', err);
+        console.error('Error fetching news', err);
       } finally {
         setLoading(false);
       }
