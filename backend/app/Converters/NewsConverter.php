@@ -15,7 +15,7 @@ class NewsConverter {
                 'image' => $item->image_path
                     ? asset('storage/news_preview_images/' . $item->image_path)
                     : null,
-                'category' => $item->category,
+                'category' => $item->category ? $item->category->name : null,
                 'author' => $item->user ? $item->user->name : 'Unknown author',
                 'date' => $item->date instanceof \Carbon\Carbon
                     ? $item->date->format('Y-m-d')

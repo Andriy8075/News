@@ -158,7 +158,7 @@ const NewsForm = ({
           name="tags"
           value={formData.tags}
           onChange={handleChange}
-          placeholder="технології, новини, україна"
+          placeholder="технології, новини, Україна"
         />
       </div>
 
