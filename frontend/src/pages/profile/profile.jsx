@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './profile.scss';
+import { getCsrfTokenFromCookie } from '../../utils/api';
+import { useUser } from '../../context/UserContext';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Profile = () => {
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
   const [userData, setUserData] = useState({
     name: 'Іван Петренко',
@@ -40,10 +45,36 @@ const Profile = () => {
     }));
   };
 
-  const handleLogout = () => {
-    // тут буде реальна логіка логауту
-    alert('Ви вийшли з акаунту');
-    // наприклад: navigate('/login');
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/logout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-XSRF-TOKEN': getCsrfTokenFromCookie(),
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok || response.status === 204) {
+        // Clear user from context
+        setUser(null);
+        // Navigate to home page
+        navigate('/');
+      } else {
+        console.error('Logout failed:', response.status);
+        // Still clear user and navigate even if request fails
+        setUser(null);
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Still clear user and navigate even if request fails
+      setUser(null);
+      navigate('/');
+    }
   };
 
   const handleGoToMyNews = () => {
