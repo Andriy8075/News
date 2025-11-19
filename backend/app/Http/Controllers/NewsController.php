@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\ValidationRules\News as NewsValidationRules;
+use App\Converters\NewsConverter;
 
 class NewsController extends Controller
 {
@@ -18,25 +19,7 @@ class NewsController extends Controller
             ->take(config('models.news.feed_count'))
             ->get();
 
-        $response = $news->map(function ($item) {
-            return [
-                'id' => $item->id,
-                'title' => $item->title,
-                'excerpt' => $item->excerpt,
-                'content' => $item->content,
-                'image' => $item->image_path 
-                    ? asset('storage/news_preview_images/' . $item->image_path)
-                    : null,
-                'category' => $item->category,
-                'author' => $item->user ? $item->user->name : 'Unknown author',
-                'date' => $item->date instanceof \Carbon\Carbon 
-                    ? $item->date->format('Y-m-d') 
-                    : ($item->date ? (string) $item->date : null),
-                'views' => $item->views,
-                'likes' => $item->likes()->count(),
-                'tags' => $item->tags->pluck('name')->toArray(),
-            ];
-        });
+        $response = NewsConverter::toResponseArray($news);
 
         return response()->json($response);
     }
@@ -199,5 +182,16 @@ class NewsController extends Controller
         return response()->json([
             'message' => 'News deleted successfully'
         ], 200);
+    }
+
+    public function myNews(Request $request) {
+        $news = News::with(['tags', ])
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->take(config('models.news.feed_count'))
+            ->get();
+        $response = NewsConverter::toResponseArray($news);
+
+        return response()->json($response);
     }
 }

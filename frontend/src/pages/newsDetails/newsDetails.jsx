@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import './newsDetails.scss';
+import { GETFetch } from '../../hooks/GETFetch';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -11,28 +12,34 @@ const NewsDetail = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        
-        const response = await fetch(`${API_BASE_URL}/news/${id}`, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Accept': 'application/json',
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setNews(data);
-        } else {
-          console.error('Failed to fetch news:', response.status);
-        }
+        const data = await GETFetch(`/news/${id}`);
+        setNews(data);
       } catch (err) {
         console.error('Error fetching news', err);
       }
+      // try {
+        
+      //   const response = await fetch(`${API_BASE_URL}/news/${id}`, {
+      //     method: 'GET',
+      //     credentials: 'include',
+      //     headers: {
+      //       'Accept': 'application/json',
+      //     },
+      //   });
+
+      //   if (response.ok) {
+      //     const data = await response.json();
+      //     setNews(data);
+      //   } else {
+      //     console.error('Failed to fetch news:', response.status);
+      //   }
+      // } catch (err) {
+      //   console.error('Error fetching news', err);
+      // }
     };
 
     fetchNews();
-  }, [id]);
+  }, []);
 
   if (!news) {
     return (

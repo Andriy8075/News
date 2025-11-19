@@ -3,20 +3,33 @@ import { useNavigate } from 'react-router-dom';
 import NewsCard from '../../components/newsCard/newsCard';
 import SearchBar from '../../components/searchBar/searchBar';
 import ConfirmModal from '../../components/confirmModel/confirmModal';
-import { mockNews } from '../../data/mockData';
 import '../newsFeed/newsFeed.scss';
+import { GETFetch } from '../../hooks/GETFetch';
 
 const MyNews = () => {
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedNewsId, setSelectedNewsId] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Імітація завантаження даних
-    setNews(mockNews);
-    setFilteredNews(mockNews);
+    const fetchNews = async () => {
+      setLoading(true);
+      try {
+        const data = await GETFetch('/mynews');
+        console.log('News data', data);
+        setNews(data);
+        setFilteredNews(data);
+      } catch (err) {
+        console.error('Error fetching news', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
   }, []);
 
   const handleSearch = (searchTerm) => {
