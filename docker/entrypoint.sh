@@ -21,5 +21,8 @@ cd ..
 
 echo "Starting servers..."
 php backend/artisan serve --host=0.0.0.0 --port=8000 &
-cd frontend &&
+cd frontend
+if [ ! -f /var/www/frontend/.env ]; then
+  cp .env.example .env
+fi
 npm run dev -- --host 0.0.0.0 --port 5173 --strictPort
