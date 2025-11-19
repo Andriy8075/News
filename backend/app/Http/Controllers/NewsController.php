@@ -94,8 +94,7 @@ class NewsController extends Controller
         }
 
         return response()->json([
-            'message' => 'News created successfully',
-            'data' => $news
+            'id' => $news->id
         ], 201);
     }
 

@@ -145,7 +145,7 @@ const CreateNews = () => {
       if (response.ok) {
         const responseData = await response.json();
         alert('Новину успішно створено!');
-        navigate('/');
+        navigate(`/news/${responseData.id}`);
       } else {
         // Handle validation errors (422 status)
         if (response.status === 422) {
