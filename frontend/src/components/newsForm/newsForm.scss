@@ -1,3 +1,51 @@
 // Import the existing styles from createNews
 @import '../../pages/createNews/createNews.scss';
 
+// Category search styles
+.category-search-group {
+  .category-search-wrapper {
+    position: relative;
+  }
+
+  .category-search-loading {
+    position: absolute;
+    right: 1.2vw;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #718096;
+    font-size: 1vw;
+    pointer-events: none;
+  }
+
+  .category-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 0.2vw solid #e2e8f0;
+    border-top: none;
+    border-radius: 0 0 1.2vw 1.2vw;
+    max-height: 20vw;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 0.4vw 0.8vw rgba(0, 0, 0, 0.1);
+
+    .category-option {
+      padding: 1vw 1.2vw;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 1.2vw;
+      border-bottom: 0.1vw solid #f7fafc;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background: #f7fafc;
+      }
+    }
+  }
+}
+

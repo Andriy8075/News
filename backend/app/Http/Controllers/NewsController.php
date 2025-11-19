@@ -9,23 +9,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\ValidationRules\News as NewsValidationRules;
 use App\Converters\NewsConverter;
+use App\QueryBuilders\NewsQueryBuilder;
 
 class NewsController extends Controller
 {
     public function index(Request $request) {
         // more complicated logic with AI feed expected in real project
-        $news = News::with(['tags', 'user'])
-            ->latest()
-            ->take(config('models.news.feed_count'))
-            ->get();
+
+        $newsQuery = NewsQueryBuilder::build($request->input('type'), $request->input('search'), auth()->user());
+        $news = $newsQuery->latest()->take(config('models.news.feed_count'))->get();
 
         $response = NewsConverter::toResponseArray($news);
 
-        return response()->json($response);
+        return response()->json($response, 200);
     }
 
     public function show(Request $request, $id) {
-        $news = News::with(['tags', 'user'])->findOrFail($id);
+        $news = News::with(['tags', 'user', 'category'])->findOrFail($id);
 
         $news->increment('views');
 
@@ -37,7 +37,7 @@ class NewsController extends Controller
             'image' => $news->image_path 
                 ? asset('storage/news_preview_images/' . $news->image_path)
                 : null,
-            'category' => $news->category,
+            'category' => $news->category ? $news->category->name : null,
             'author' => $news->user ? $news->user->name : 'Unknown author',
             'date' => $news->date instanceof \Carbon\Carbon 
                 ? $news->date->format('Y-m-d') 
@@ -67,9 +67,9 @@ class NewsController extends Controller
             $validated['image_path'] = basename($filename);
         }
 
-        if (isset($validated['category'])) {
-            Category::firstOrCreate(['name' => $validated['category']]);
-        }
+        $category = Category::firstOrCreate(['name' => $validated['category']]);
+        $validated['category_id'] = $category->id;
+        unset($validated['category']);
 
         $tagsInput = $validated['tags'] ?? null;
         unset($validated['tags']);
@@ -110,10 +110,6 @@ class NewsController extends Controller
 
         $ValidationRules = NewsValidationRules::getRules();
         $validated = $request->validate($ValidationRules);
-        $validated['user_id'] = auth()->id();
-        $validated['date'] = now()->format('Y-m-d');
-        $validated['likes'] = $news->likes;
-        $validated['views'] = $news->views;
 
         if ($request->hasFile('image')) {
             if ($news->image_path) {
@@ -127,12 +123,17 @@ class NewsController extends Controller
 
         // Handle category - create if it doesn't exist
         if (isset($validated['category'])) {
-            Category::firstOrCreate(['name' => $validated['category']]);
+            $category = Category::firstOrCreate(['name' => $validated['category']]);
+            $validated['category_id'] = $category->id;
         }
+        unset($validated['category']);
 
         // Extract tags from validated data
         $tagsInput = $validated['tags'] ?? null;
         unset($validated['tags']);
+
+        // Don't allow updating user_id, views, or likes through this endpoint
+        unset($validated['user_id'], $validated['views'], $validated['likes']);
 
         // Update news
         $news->update($validated);
@@ -175,14 +176,14 @@ class NewsController extends Controller
         ], 200);
     }
 
-    public function myNews(Request $request) {
-        $news = News::with(['tags', ])
-            ->where('user_id', auth()->id())
-            ->latest()
-            ->take(config('models.news.feed_count'))
-            ->get();
-        $response = NewsConverter::toResponseArray($news);
+    // public function myNews(Request $request) {
+    //     $news = News::with(['tags', 'user', 'category'])
+    //         ->where('user_id', auth()->id())
+    //         ->latest()
+    //         ->take(config('models.news.feed_count'))
+    //         ->get();
+    //     $response = NewsConverter::toResponseArray($news);
 
-        return response()->json($response);
-    }
+    //     return response()->json($response);
+    // }
 }

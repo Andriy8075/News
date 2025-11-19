@@ -1,23 +1,43 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import './newsForm.scss';
 
 const NewsForm = ({
-  formData,
   categories,
-  newCategory,
-  showAddCategory,
+  formData,
+  categorySearchTerm,
+  isSearchingCategories,
+  showCategoryDropdown,
+  setShowCategoryDropdown,
   errors,
   isSubmitting,
   onSubmit,
   onCancel,
   handleChange,
   handleImageChange,
-  handleAddCategory,
-  setShowAddCategory,
-  setNewCategory,
+  handleCategorySearchChange,
+  handleCategorySelect,
   submitButtonText = 'Опублікувати новину',
   cancelButtonText = 'Скасувати',
 }) => {
+  const categoryDropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (categoryDropdownRef.current && !categoryDropdownRef.current.contains(event.target)) {
+        setShowCategoryDropdown(false);
+      }
+    };
+
+    if (showCategoryDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showCategoryDropdown, setShowCategoryDropdown]);
+
   return (
     <form onSubmit={onSubmit} className="news-form">
       {errors.general && (
@@ -84,48 +104,37 @@ const NewsForm = ({
       </div>
 
       <div className="form-row">
-        <div className="form-group">
+        <div className="form-group category-search-group">
           <label htmlFor="category">Категорія</label>
-          <div className="category-row">
-            <select
+          <div className="category-search-wrapper" ref={categoryDropdownRef}>
+            <input
+              type="text"
               id="category"
               name="category"
-              value={formData.category}
-              onChange={handleChange}
+              value={categorySearchTerm}
+              onChange={handleCategorySearchChange}
+              onFocus={() => setShowCategoryDropdown(true)}
+              placeholder="Введіть назву категорії..."
               className={errors.category ? 'error' : ''}
-            >
-              {categories.map(cat => (
-                <option key={cat.value} value={cat.value}>
-                  {cat.label}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              className="btn-secondary btn-add-category"
-              onClick={() => setShowAddCategory(prev => !prev)}
-            >
-              ➕ Додати
-            </button>
+              autoComplete="off"
+            />
+            {isSearchingCategories && (
+              <div className="category-search-loading">Пошук...</div>
+            )}
+            {showCategoryDropdown && categories.length > 0 && (
+              <div className="category-dropdown">
+                {categories.map(cat => (
+                  <div
+                    key={cat.id}
+                    className="category-option"
+                    onClick={() => handleCategorySelect(cat.name)}
+                  >
+                    {cat.name}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-
-          {showAddCategory && (
-            <div className="add-category">
-              <input
-                type="text"
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-                placeholder="Нова категорія"
-              />
-              <button
-                type="button"
-                className="btn-secondary btn-small-primary"
-                onClick={handleAddCategory}
-              >
-                Зберегти
-              </button>
-            </div>
-          )}
           {errors.category && (
             <span className="field-error">
               {Array.isArray(errors.category) ? errors.category[0] : errors.category}
@@ -158,7 +167,7 @@ const NewsForm = ({
           name="tags"
           value={formData.tags}
           onChange={handleChange}
-          placeholder="технології, новини, україна"
+          placeholder="технології, новини, Україна"
         />
       </div>
 

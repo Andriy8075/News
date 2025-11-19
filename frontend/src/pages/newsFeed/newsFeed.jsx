@@ -3,7 +3,7 @@ import { useNewsList } from '../../hooks/useNewsList';
 import NewsList from '../../components/newsList/NewsList';
 
 const NewsFeed = () => {
-  const { filteredNews, loading, handleSearch } = useNewsList('/news');
+  const { filteredNews, loading, handleSearch } = useNewsList();
 
   return (
     <NewsList

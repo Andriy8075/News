@@ -11,7 +11,7 @@ class News extends Model
         'excerpt',
         'content',
         'image_path',
-        'category',
+        'category_id',
         'user_id',
         'date',
         'views',
@@ -37,5 +37,10 @@ class News extends Model
     public function likes()
     {
         return $this->belongsToMany(User::class, 'news_user_likes');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }
