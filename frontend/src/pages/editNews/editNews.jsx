@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../createNews/createNews.scss';
+import { GETFetch } from '../../hooks/GETFetch';
+import { getCsrfTokenFromCookie } from '../../utils/api';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const EditNews = () => {
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const navigate = useNavigate();
   const { id } = useParams(); // /news/:id/edit
 
@@ -28,29 +35,24 @@ const EditNews = () => {
   const [newCategory, setNewCategory] = useState('');
   const [showAddCategory, setShowAddCategory] = useState(false);
 
-  // 👉 тут можна підтягувати новину з бекенду
   useEffect(() => {
-    // TODO: замінити на реальний fetch за id
-    // приклад мокових даних:
-    const mockNews = {
-      title: 'Приклад заголовку новини',
-      excerpt: 'Короткий опис існуючої новини...',
-      content: 'Тут знаходиться повний текст новини, яку ми редагуємо...',
-      category: 'technology',
-      tags: 'технології, новини, україна',
-      imageUrl: '' // якщо є URL раніше завантаженої картинки
+    const fetchNews = async () => {
+      try {
+        const data = await GETFetch(`/news/${id}`);
+        setFormData(prev => ({
+          ...prev,
+          title: data.title,
+          excerpt: data.excerpt,
+          content: data.content,
+          category: data.category,
+          tags: data.tags.join(', '),
+        }));
+      } catch (err) {
+        console.error('Error fetching news', err);
+      }
     };
 
-    setFormData(prev => ({
-      ...prev,
-      title: mockNews.title,
-      excerpt: mockNews.excerpt,
-      content: mockNews.content,
-      category: mockNews.category,
-      tags: mockNews.tags,
-      imageFile: null,
-      imagePreview: mockNews.imageUrl || null
-    }));
+    fetchNews();
   }, [id]);
 
   const handleChange = (e) => {
@@ -116,29 +118,77 @@ const EditNews = () => {
     setShowAddCategory(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
+    setIsSubmitting(true);
 
-    // Тут логіка оновлення новини на сервері
-    /*
-    const data = new FormData();
-    data.append('title', formData.title);
-    data.append('excerpt', formData.excerpt);
-    data.append('content', formData.content);
-    data.append('category', formData.category);
-    data.append('tags', formData.tags);
+    const token = getCsrfTokenFromCookie();
+    console.log(token);
+
+    // Prepare FormData for file upload
+    const formDataToSend = new FormData();
+    console.log(formData);
+    formDataToSend.append('title', formData.title);
+    formDataToSend.append('excerpt', formData.excerpt);
+    formDataToSend.append('content', formData.content);
+    formDataToSend.append('category', formData.category);
+    
+    // Add image if selected
     if (formData.imageFile) {
-      data.append('image', formData.imageFile);
+      formDataToSend.append('image', formData.imageFile);
     }
 
-    fetch(`/api/news/${id}`, {
-      method: 'PUT',
-      body: data
-    })
-    */
+    // Parse tags from comma-separated string to array
+    console.log(formData.tags);
+    if (formData.tags.trim()) {
+      const tagsArray = formData.tags
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(tag => tag.length > 0);
+      
+      tagsArray.forEach(tag => {
+        formDataToSend.append('tags[]', tag);
+      });
+    }
 
-    alert('Новину успішно оновлено!');
-    navigate('/'); // або назад на сторінку новини: navigate(`/news/${id}`);
+    // Let Laravel know we want a PATCH even though we're sending multipart/form-data
+    formDataToSend.append('_method', 'PATCH');
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/news/${id}/update`, {
+        method: 'POST',
+        body: formDataToSend,
+        headers: {
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-XSRF-TOKEN': token,
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        alert('Новину змінено успішно!');
+        navigate(`/news/${id}`);
+      } else {
+        // Handle validation errors (422 status)
+        if (response.status === 422) {
+          const errorData = await response.json();
+          if (errorData.errors) {
+            setErrors(errorData.errors);
+          } else {
+            setErrors({ general: ['Помилка валідації'] });
+          }
+        } else {
+          setErrors({ general: ['Помилка при редагуванні новини!'] });
+        }
+      }
+    } catch (error) {
+      console.error('Error creating news:', error);
+      setErrors({ general: ['Помилка підключення до сервера'] });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -147,6 +197,12 @@ const EditNews = () => {
         <h1 className="page-title">✏️ Редагувати новину</h1>
 
         <form onSubmit={handleSubmit} className="news-form">
+          {errors.general && (
+            <div className="error-message">
+              {Array.isArray(errors.general) ? errors.general[0] : errors.general}
+            </div>
+          )}
+
           <div className="form-group">
             <label htmlFor="title">Заголовок *</label>
             <input
@@ -157,7 +213,13 @@ const EditNews = () => {
               onChange={handleChange}
               placeholder="Введіть заголовок новини"
               required
+              className={errors.title ? 'error' : ''}
             />
+            {errors.title && (
+              <span className="field-error">
+                {Array.isArray(errors.title) ? errors.title[0] : errors.title}
+              </span>
+            )}
           </div>
 
           <div className="form-group">
@@ -170,7 +232,13 @@ const EditNews = () => {
               placeholder="Короткий опис новини"
               rows="3"
               required
+              className={errors.excerpt ? 'error' : ''}
             />
+            {errors.excerpt && (
+              <span className="field-error">
+                {Array.isArray(errors.excerpt) ? errors.excerpt[0] : errors.excerpt}
+              </span>
+            )}
           </div>
 
           <div className="form-group">
@@ -183,7 +251,13 @@ const EditNews = () => {
               placeholder="Повний текст новини"
               rows="10"
               required
+              className={errors.content ? 'error' : ''}
             />
+            {errors.content && (
+              <span className="field-error">
+                {Array.isArray(errors.content) ? errors.content[0] : errors.content}
+              </span>
+            )}
           </div>
 
           <div className="form-row">
@@ -195,6 +269,7 @@ const EditNews = () => {
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
+                  className={errors.category ? 'error' : ''}
                 >
                   {categories.map(cat => (
                     <option key={cat.value} value={cat.value}>
@@ -228,7 +303,13 @@ const EditNews = () => {
                   </button>
                 </div>
               )}
+              {errors.category && (
+                <span className="field-error">
+                  {Array.isArray(errors.category) ? errors.category[0] : errors.category}
+                </span>
+              )}
             </div>
+
 
             <div className="form-group">
               <label htmlFor="image">Зображення</label>
@@ -263,12 +344,12 @@ const EditNews = () => {
             <button
               type="button"
               className="btn-secondary"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate('/')}
             >
               Скасувати
             </button>
-            <button type="submit" className="btn-primary">
-              Зберегти зміни
+            <button type="submit" className="btn-primary" disabled={isSubmitting}>
+              {isSubmitting ? 'Публікація...' : 'Опублікувати новину'}
             </button>
           </div>
         </form>

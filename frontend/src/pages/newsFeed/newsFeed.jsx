@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NewsCard from '../../components/newsCard/newsCard';
 import SearchBar from '../../components/searchBar/searchBar';
 import './newsFeed.scss';
+import { GETFetch } from '../../hooks/GETFetch';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -9,34 +10,16 @@ const NewsFeed = () => {
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchNews = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        setError(null);
-        
-        const response = await fetch(`${API_BASE_URL}/news`, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Accept': 'application/json',
-          },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('data', data);
-          setNews(data);
-          setFilteredNews(data);
-        } else {
-          setError('Не вдалося завантажити новини');
-          console.error('Failed to fetch news:', response.status);
-        }
+        const data = await GETFetch('/news');
+        setNews(data);
+        setFilteredNews(data);
       } catch (err) {
-        setError('Помилка підключення до сервера');
-        console.error('Error fetching news:', err);
+        console.error('Error fetching news', err);
       } finally {
         setLoading(false);
       }
@@ -72,13 +55,7 @@ const NewsFeed = () => {
           </div>
         )}
         
-        {error && (
-          <div className="error-message">
-            <p>❌ {error}</p>
-          </div>
-        )}
-        
-        {!loading && !error && (
+        {!loading && (
           <>
             <div className="news-grid">
               {filteredNews.map(item => (

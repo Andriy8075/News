@@ -9,7 +9,15 @@ Route::get('/user', function () {
     ]);
 });
 
-Route::post('/news/store', [NewsController::class, 'store'])->middleware('editor')->name('news.store');
+Route::group(['middleware' => 'editor'], function () {
+    Route::post('/news/store', [NewsController::class, 'store'])->middleware('editor')->name('news.store');
+    Route::get('/mynews', [NewsController::class, 'myNews'])->name('myNews');
+});
+Route::group(['middleware' => 'owner'], function () {
+    Route::delete('/news/{id}/delete', [NewsController::class, 'destroy'])->middleware('owner')->name('news.destroy');
+    Route::patch('/news/{id}/update', [NewsController::class, 'update'])->middleware('owner')->name('news.update');
+});
+
 Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('news/{id}', [NewsController::class, 'show'])->name('news.show');
 

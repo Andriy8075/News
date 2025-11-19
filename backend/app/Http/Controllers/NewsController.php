@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\ValidationRules\News as NewsValidationRules;
+use App\Converters\NewsConverter;
 
 class NewsController extends Controller
 {
@@ -18,25 +19,7 @@ class NewsController extends Controller
             ->take(config('models.news.feed_count'))
             ->get();
 
-        $response = $news->map(function ($item) {
-            return [
-                'id' => $item->id,
-                'title' => $item->title,
-                'excerpt' => $item->excerpt,
-                'content' => $item->content,
-                'image' => $item->image_path 
-                    ? asset('storage/news_preview_images/' . $item->image_path)
-                    : null,
-                'category' => $item->category,
-                'author' => $item->user ? $item->user->name : 'Unknown author',
-                'date' => $item->date instanceof \Carbon\Carbon 
-                    ? $item->date->format('Y-m-d') 
-                    : ($item->date ? (string) $item->date : null),
-                'views' => $item->views,
-                'likes' => $item->likes()->count(),
-                'tags' => $item->tags->pluck('name')->toArray(),
-            ];
-        });
+        $response = NewsConverter::toResponseArray($news);
 
         return response()->json($response);
     }
@@ -128,10 +111,12 @@ class NewsController extends Controller
 
         $ValidationRules = NewsValidationRules::getRules();
         $validated = $request->validate($ValidationRules);
+        $validated['user_id'] = auth()->id();
+        $validated['date'] = now()->format('Y-m-d');
+        $validated['likes'] = $news->likes;
+        $validated['views'] = $news->views;
 
-        // Handle image file upload
         if ($request->hasFile('image')) {
-            // Delete old image if it exists
             if ($news->image_path) {
                 Storage::disk('public')->delete('news_preview_images/' . $news->image_path);
             }
@@ -149,9 +134,6 @@ class NewsController extends Controller
         // Extract tags from validated data
         $tagsInput = $validated['tags'] ?? null;
         unset($validated['tags']);
-
-        // Don't allow updating user_id, views, or likes through this endpoint
-        unset($validated['user_id'], $validated['views'], $validated['likes']);
 
         // Update news
         $news->update($validated);
@@ -181,16 +163,9 @@ class NewsController extends Controller
     public function destroy(Request $request, $id) {
         $news = News::findOrFail($id);
 
-        // Check authorization: user must be the owner or an editor
-        if ($news->user_id !== auth()->id() && !auth()->user()->editor) {
-            return response()->json([
-                'message' => 'Forbidden. You can only delete your own news.'
-            ], 403);
-        }
-
-        // Delete associated image if it exists
-        if ($news->image) {
-            Storage::disk('public')->delete('news_preview_images/' . $news->image);
+            // Delete associated image if it exists
+        if ($news->image_path) {
+            Storage::disk('public')->delete('news_preview_images/' . $news->image_path);
         }
 
         // Delete the news item (tags will be automatically detached due to cascade)
@@ -199,5 +174,16 @@ class NewsController extends Controller
         return response()->json([
             'message' => 'News deleted successfully'
         ], 200);
+    }
+
+    public function myNews(Request $request) {
+        $news = News::with(['tags', ])
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->take(config('models.news.feed_count'))
+            ->get();
+        $response = NewsConverter::toResponseArray($news);
+
+        return response()->json($response);
     }
 }

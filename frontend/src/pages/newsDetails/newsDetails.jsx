@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { mockNews } from '../../data/mockData';
 import './newsDetails.scss';
+import { GETFetch } from '../../hooks/GETFetch';
 
 const NewsDetail = () => {
   const { id } = useParams();
   const [news, setNews] = useState(null);
 
   useEffect(() => {
-    const foundNews = mockNews.find(item => item.id === parseInt(id));
-    setNews(foundNews);
-  }, [id]);
+    const fetchNews = async () => {
+      try {
+        const data = await GETFetch(`/news/${id}`);
+        setNews(data);
+      } catch (err) {
+        console.error('Error fetching news', err);
+      }
+    };
+
+    fetchNews();
+  }, []);
 
   if (!news) {
     return (
@@ -58,16 +66,7 @@ const NewsDetail = () => {
             <p className="news-excerpt">{news.excerpt}</p>
             
             <div className="news-full-text">
-              <p>Це повний текст новини. Тут може бути багато цікавої інформації, 
-                 детальний опис подій, аналіз ситуації та інші важливі деталі.</p>
-              
-              <p>У реальному додатку цей текст буде завантажуватися з сервера 
-                 або бази даних, і може містити різноманітне форматування, 
-                 зображення, відео та інші медіа-елементи.</p>
-
-              <p>Новини охоплюють різні теми: політику, економіку, технології, 
-                 спорт, культуру та багато іншого. Кожна новина має свою 
-                 унікальну цінність та важливість для читачів.</p>
+              {news.content}
             </div>
 
             <div className="news-tags">
