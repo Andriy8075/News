@@ -6,7 +6,7 @@ import { GETFetch } from './GETFetch';
  * @param {string} endpoint - API endpoint to fetch news from
  * @returns {Object} News list state and handlers
  */
-export const useNewsList = (endpoint) => {
+export const useNewsList = (newsType) => {
   const [news, setNews] = useState([]);
   const [filteredNews, setFilteredNews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +15,7 @@ export const useNewsList = (endpoint) => {
     const fetchNews = async () => {
       setLoading(true);
       try {
-        const data = await GETFetch(endpoint);
+        const data = await GETFetch('/news?type=' + newsType);
         setNews(data);
         setFilteredNews(data);
       } catch (err) {
@@ -26,7 +26,7 @@ export const useNewsList = (endpoint) => {
     };
 
     fetchNews();
-  }, [endpoint]);
+  }, []);
 
   const handleSearch = (searchTerm) => {
     if (!searchTerm.trim()) {

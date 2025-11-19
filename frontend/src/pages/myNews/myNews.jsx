@@ -7,7 +7,7 @@ import ConfirmModal from '../../components/confirmModel/confirmModal';
 
 const MyNews = () => {
   const navigate = useNavigate();
-  const { news, filteredNews, loading, handleSearch, updateNews } = useNewsList('/mynews');
+  const { news, filteredNews, loading, handleSearch, updateNews } = useNewsList('created');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedNewsId, setSelectedNewsId] = useState(null);
 

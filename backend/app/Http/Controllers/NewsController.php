@@ -9,19 +9,19 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\ValidationRules\News as NewsValidationRules;
 use App\Converters\NewsConverter;
+use App\QueryBuilders\NewsQueryBuilder;
 
 class NewsController extends Controller
 {
     public function index(Request $request) {
         // more complicated logic with AI feed expected in real project
-        $news = News::with(['tags', 'user', 'category'])
-            ->latest()
-            ->take(config('models.news.feed_count'))
-            ->get();
+
+        $newsQuery = NewsQueryBuilder::build($request->input('type'), $request->input('search'), auth()->user());
+        $news = $newsQuery->latest()->take(config('models.news.feed_count'))->get();
 
         $response = NewsConverter::toResponseArray($news);
 
-        return response()->json($response);
+        return response()->json($response, 200);
     }
 
     public function show(Request $request, $id) {
@@ -176,14 +176,14 @@ class NewsController extends Controller
         ], 200);
     }
 
-    public function myNews(Request $request) {
-        $news = News::with(['tags', 'user', 'category'])
-            ->where('user_id', auth()->id())
-            ->latest()
-            ->take(config('models.news.feed_count'))
-            ->get();
-        $response = NewsConverter::toResponseArray($news);
+    // public function myNews(Request $request) {
+    //     $news = News::with(['tags', 'user', 'category'])
+    //         ->where('user_id', auth()->id())
+    //         ->latest()
+    //         ->take(config('models.news.feed_count'))
+    //         ->get();
+    //     $response = NewsConverter::toResponseArray($news);
 
-        return response()->json($response);
-    }
+    //     return response()->json($response);
+    // }
 }

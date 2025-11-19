@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    // TODO: use caching to reduce database load
+
     public function index(Request $request)
     {
         $categories = Category::withCount('news')
