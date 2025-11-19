@@ -14,17 +14,18 @@ const EditNews = () => {
     categories,
     formData,
     setFormData,
-    newCategory,
-    showAddCategory,
+    categorySearchTerm,
+    isSearchingCategories,
+    showCategoryDropdown,
+    setShowCategoryDropdown,
     errors,
     setErrors,
     isSubmitting,
     setIsSubmitting,
     handleChange,
     handleImageChange,
-    handleAddCategory,
-    setShowAddCategory,
-    setNewCategory,
+    handleCategorySearchChange,
+    handleCategorySelect,
   } = useNewsForm();
 
   useEffect(() => {
@@ -36,7 +37,7 @@ const EditNews = () => {
           title: data.title,
           excerpt: data.excerpt,
           content: data.content,
-          category: data.category,
+          category: data.category || '',
           tags: data.tags.join(', '),
           imagePreview: data.image,
         }));
@@ -76,17 +77,18 @@ const EditNews = () => {
         <NewsForm
           categories={categories}
           formData={formData}
-          newCategory={newCategory}
-          showAddCategory={showAddCategory}
+          categorySearchTerm={categorySearchTerm}
+          isSearchingCategories={isSearchingCategories}
+          showCategoryDropdown={showCategoryDropdown}
+          setShowCategoryDropdown={setShowCategoryDropdown}
           errors={errors}
           isSubmitting={isSubmitting}
           onSubmit={handleSubmit}
           onCancel={() => navigate('/')}
           handleChange={handleChange}
           handleImageChange={handleImageChange}
-          handleAddCategory={handleAddCategory}
-          setShowAddCategory={setShowAddCategory}
-          setNewCategory={setNewCategory}
+          handleCategorySearchChange={handleCategorySearchChange}
+          handleCategorySelect={handleCategorySelect}
           submitButtonText="Зберегти зміни"
         />
       </div>

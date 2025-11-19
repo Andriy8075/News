@@ -23,5 +23,6 @@ Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::get('news/{id}', [NewsController::class, 'show'])->name('news.show');
 
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+Route::get('/categories/search', [CategoryController::class, 'search'])->name('categories.search');
 
 require __DIR__.'/auth.php';
