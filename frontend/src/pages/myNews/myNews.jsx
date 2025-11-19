@@ -5,6 +5,9 @@ import SearchBar from '../../components/searchBar/searchBar';
 import ConfirmModal from '../../components/confirmModel/confirmModal';
 import '../newsFeed/newsFeed.scss';
 import { GETFetch } from '../../hooks/GETFetch';
+import { getCsrfTokenFromCookie } from '../../utils/api';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const MyNews = () => {
   const [news, setNews] = useState([]);
@@ -51,7 +54,25 @@ const MyNews = () => {
     setIsModalOpen(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
+    const token = getCsrfTokenFromCookie();
+    const response = await fetch(`${API_BASE_URL}/news/${selectedNewsId}/delete`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-XSRF-TOKEN': token,
+      },
+      credentials: 'include',
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log('data', data);
+    } else {
+      console.error('Failed to delete news', response.status);
+    }
+
     const updatedNews = news.filter(item => item.id !== selectedNewsId);
     setNews(updatedNews);
     setFilteredNews(updatedNews);

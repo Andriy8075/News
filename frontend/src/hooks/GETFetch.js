@@ -7,6 +7,7 @@ export const GETFetch = async (url) => {
           credentials: 'include',
           headers: {
             'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
           },
         });
 

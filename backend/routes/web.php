@@ -14,6 +14,7 @@ Route::group(['middleware' => 'editor'], function () {
     Route::get('/mynews', [NewsController::class, 'myNews'])->name('myNews');
 });
 Route::group(['middleware' => 'owner'], function () {
+    Route::delete('/news/{id}/delete', [NewsController::class, 'destroy'])->middleware('owner')->name('news.destroy');
     Route::patch('/news/{id}/update', [NewsController::class, 'update'])->middleware('owner')->name('news.update');
 });
 

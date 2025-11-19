@@ -168,7 +168,6 @@ const EditNews = () => {
       });
 
       if (response.ok) {
-        const responseData = await response.json();
         alert('Новину змінено успішно!');
         navigate(`/news/${id}`);
       } else {

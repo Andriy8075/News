@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\ValidationRules\News as NewsValidationRules;
 use App\Converters\NewsConverter;
-use Illuminate\Support\Facades\Log;
 
 class NewsController extends Controller
 {
@@ -111,13 +110,7 @@ class NewsController extends Controller
         }
 
         $ValidationRules = NewsValidationRules::getRules();
-        Log::info('before validation');
-        Log::info('request->all()', $request->all());
-        Log::info('request->input()', $request->input());
-        Log::info('request->post()', $request->post());
-        Log::info('request->files->all()', $request->files->all());
         $validated = $request->validate($ValidationRules);
-        Log::info('after validation');
         $validated['user_id'] = auth()->id();
         $validated['date'] = now()->format('Y-m-d');
         $validated['likes'] = $news->likes;
@@ -170,16 +163,9 @@ class NewsController extends Controller
     public function destroy(Request $request, $id) {
         $news = News::findOrFail($id);
 
-        // Check authorization: user must be the owner or an editor
-        if ($news->user_id !== auth()->id() && !auth()->user()->editor) {
-            return response()->json([
-                'message' => 'Forbidden. You can only delete your own news.'
-            ], 403);
-        }
-
-        // Delete associated image if it exists
-        if ($news->image) {
-            Storage::disk('public')->delete('news_preview_images/' . $news->image);
+            // Delete associated image if it exists
+        if ($news->image_path) {
+            Storage::disk('public')->delete('news_preview_images/' . $news->image_path);
         }
 
         // Delete the news item (tags will be automatically detached due to cascade)
