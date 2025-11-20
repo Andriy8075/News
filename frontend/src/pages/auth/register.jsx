@@ -1,13 +1,11 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './auth.scss';
-import { useUser } from '../../context/UserContext';
 import { useAuthForm } from '../../hooks/useAuthForm';
 import { makeAuthRequest } from './makeAuthRequest';
 
 const Register = () => {
   const navigate = useNavigate();
-  const { setUser } = useUser();
 
   const {
     formData,
@@ -37,14 +35,23 @@ const Register = () => {
     delete submitData.confirmPassword;
 
     try {
-        const response = await makeAuthRequest('register', submitData);
+      const response = await makeAuthRequest('register', submitData);
 
       if (response.ok) {
         const responseData = await response.json();
-        setUser(responseData.user ?? null);
+
+        if (responseData.user) {
+          localStorage.setItem('user', JSON.stringify(responseData.user));
+        } else {
+          localStorage.removeItem('user');
+        }
+
+        if (responseData.token) {
+          localStorage.setItem('token', responseData.token);
+        }
+
         navigate('/');
       } else {
-        // Handle validation errors (422 status)
         if (response.status === 422) {
           const errorData = await response.json();
           if (errorData.errors) {
@@ -149,12 +156,14 @@ const Register = () => {
                 onChange={handleChange}
                 placeholder="Повторіть пароль"
                 required
-                className={errors.confirmPassword || errors.password_confirmation ? 'error' : ''}
+                className={
+                  errors.confirmPassword || errors.password_confirmation ? 'error' : ''
+                }
               />
               {(errors.confirmPassword || errors.password_confirmation) && (
                 <span className="field-error">
-                  {Array.isArray(errors.confirmPassword) 
-                    ? errors.confirmPassword[0] 
+                  {Array.isArray(errors.confirmPassword)
+                    ? errors.confirmPassword[0]
                     : Array.isArray(errors.password_confirmation)
                     ? errors.password_confirmation[0]
                     : errors.confirmPassword || errors.password_confirmation}
