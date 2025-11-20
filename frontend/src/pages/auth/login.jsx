@@ -1,14 +1,11 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './auth.scss';
-import { getCsrfTokenFromCookie } from '../../utils/api';
-import { useUser } from '../../context/UserContext';
 import { useAuthForm } from '../../hooks/useAuthForm';
 import { makeAuthRequest } from './makeAuthRequest';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setUser } = useUser();
 
   const {
     formData,
@@ -29,11 +26,19 @@ const Login = () => {
 
       if (response.ok) {
         const responseData = await response.json();
+
         if (responseData.user) {
-          setUser(responseData.user);
+          // зберігаємо юзера в localStorage
+          localStorage.setItem('user', JSON.stringify(responseData.user));
         } else {
-          setUser(null);
+          localStorage.removeItem('user');
         }
+
+        // якщо бекенд повертає токен — можеш зберегти і його
+        if (responseData.token) {
+          localStorage.setItem('token', responseData.token);
+        }
+
         navigate('/');
       } else {
         if (response.status === 422) {

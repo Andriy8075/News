@@ -19,16 +19,10 @@
   }
 
   .news-grid {
-    column-count: 3;
-    column-gap: 2vw;
-
-    @media (max-width: 1024px) {
-      column-count: 2;
-    }
-
-    @media (max-width: 768px) {
-      column-count: 1;
-    }
+    display: flex;
+    justify-content: center;
+    gap: 2vw;
+    flex-wrap: wrap;
   }
 
   .no-results {

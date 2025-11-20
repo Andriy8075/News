@@ -1,12 +1,33 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './header.scss';
-import { useUser } from '../../context/UserContext';
 
 const Header = () => {
-  const { user, loading } = useUser();
-
+  const [user, setUser] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      } else {
+        setUser(null);
+      }
+    } catch (e) {
+      console.error('Failed to parse user from localStorage', e);
+      setUser(null);
+    }
+  }, [location]); // оновлюємо при зміні маршруту
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    setUser(null);
+    navigate('/login');
+  };
+
   return (
     <header className="header">
       <div className="header-container">
@@ -14,28 +35,37 @@ const Header = () => {
           📰 NewsHub
         </Link>
         <nav className="nav">
-          {!loading && (
-            <Link 
-              to="/" 
-              className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
-            >
-              🏠 Головна
-            </Link>
-          )}
+          <Link
+            to="/"
+            className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
+          >
+            🏠 Головна
+          </Link>
+
           {user?.editor && (
-            <Link 
-              to="/create" 
+            <Link
+              to="/create"
               className={`nav-link ${location.pathname === '/create' ? 'active' : ''}`}
             >
               ✨ Створити
             </Link>
           )}
+
           {user && (
-            <Link 
-              to="/profile" 
+            <Link
+              to="/profile"
               className={`nav-link ${location.pathname === '/profile' ? 'active' : ''}`}
             >
               👤 Профіль
+            </Link>
+          )}
+
+          {!user && (
+            <Link
+              to="/login"
+              className={`nav-link ${location.pathname === '/login' ? 'active' : ''}`}
+            >
+              🔑 Увійти
             </Link>
           )}
         </nav>
