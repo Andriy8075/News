@@ -16,8 +16,8 @@ class NewsController extends Controller
     public function index(Request $request) {
         // more complicated logic with AI feed expected in real project
 
-        $newsQuery = NewsQueryBuilder::build($request->input('type'), $request->input('search'), auth()->user());
-        $news = $newsQuery->latest()->take(config('models.news.feed_count'))->get();
+        $newsQuery = NewsQueryBuilder::build($request->input('type'), $request->input('search'),  auth()->user());
+        $news = $newsQuery->latest()->paginate($request->input('perPage'), ['*'], 'page', $request->input('page') || 1);
 
         $response = NewsConverter::toResponseArray($news);
 
@@ -34,13 +34,13 @@ class NewsController extends Controller
             'title' => $news->title,
             'excerpt' => $news->excerpt,
             'content' => $news->content,
-            'image' => $news->image_path 
+            'image' => $news->image_path
                 ? asset('storage/news_preview_images/' . $news->image_path)
                 : null,
             'category' => $news->category ? $news->category->name : null,
             'author' => $news->user ? $news->user->name : 'Unknown author',
-            'date' => $news->date instanceof \Carbon\Carbon 
-                ? $news->date->format('Y-m-d') 
+            'date' => $news->date instanceof \Carbon\Carbon
+                ? $news->date->format('Y-m-d')
                 : ($news->date ? (string) $news->date : null),
             'views' => $news->views,
             'likes' => $news->likes()->count(), // requires rewriting to decrease database load

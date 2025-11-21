@@ -12,30 +12,19 @@ const NewsFeed = () => {
   const [searchRequest, setSearchRequest] = useState('');
 
   // імітація запиту до "серверу"
-  const loadData = async (page, request) => {
+  const loadData = async (page, search, perPage=null) => {
+    let data;
     try {
       setLoading(true);
 
-      // фільтрація по title (пошук)
-      let filtered = mockNews;
-      if (request) {
-        filtered = filtered.filter((item) =>
-          item.title.toLowerCase().includes(request.toLowerCase())
-        );
-      }
+      search = search.toLowerCase()
 
-      // підмасив на основі пагінації
-      const start = (page - 1) * PER_PAGE;
-      const end = start + PER_PAGE;
-      const pageData = filtered.slice(start, end);
-      console.log(pageData)
+      const response = await fetch(`http://localhost:8000/news?page=${page}&perPage=${perPage || PER_PAGE}&search=${search}`)
+      data = response.json();
 
-      // імітація запиту
-      await new Promise((resolve) => setTimeout(resolve, 300));
-
-      return pageData;
     } finally {
       setLoading(false);
+      return data;
     }
   };
 
