@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useNewsList } from '../../hooks/useNewsList';
-import { deleteNews } from '../../utils/deleteNews';
-import NewsList from '../../components/newsList/NewsList';
+import NewsFeed from '../newsFeed/NewsFeed';
 import ConfirmModal from '../../components/confirmModel/confirmModal';
+import { deleteNews } from '../../utils/deleteNews';
 
 const MyNews = () => {
   const navigate = useNavigate();
-  const { news, filteredNews, loading, handleSearch, updateNews } = useNewsList('created');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedNewsId, setSelectedNewsId] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleDeleteClick = (id) => {
     setSelectedNewsId(id);
@@ -19,8 +18,7 @@ const MyNews = () => {
   const handleConfirmDelete = async () => {
     try {
       await deleteNews(selectedNewsId);
-      const updatedNews = news.filter(item => item.id !== selectedNewsId);
-      updateNews(updatedNews);
+      setRefreshKey((prev) => prev + 1);
     } catch (error) {
       console.error('Failed to delete news', error);
     } finally {
@@ -40,11 +38,11 @@ const MyNews = () => {
 
   return (
     <>
-      <NewsList
+      <NewsFeed
+        key={refreshKey}       
+        type="created"
         title="📰 Мої новини"
-        filteredNews={filteredNews}
-        loading={loading}
-        onSearch={handleSearch}
+        enableActions={true}
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
       />

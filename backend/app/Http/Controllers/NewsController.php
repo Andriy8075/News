@@ -17,7 +17,7 @@ class NewsController extends Controller
         // more complicated logic with AI feed expected in real project
 
         $newsQuery = NewsQueryBuilder::build($request->input('type'), $request->input('search'),  auth()->user());
-        $news = $newsQuery->latest()->paginate($request->input('perPage'), ['*'], 'page', $request->input('page') || 1);
+        $news = $newsQuery->latest()->paginate($request->input('perPage'), ['*'], 'page', $request->input('page', 1));
 
         $response = NewsConverter::toResponseArray($news);
 
