@@ -72,7 +72,7 @@ class UserController extends Controller
 
         $data = $request->validate([
             'current_password' => 'required|string',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'new_password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         // Verify current password
@@ -84,14 +84,14 @@ class UserController extends Controller
         }
 
         // Prevent user from setting the same password
-        if (Hash::check($data['password'], $user->password)) {
+        if (Hash::check($data['new_password'], $user->password)) {
             return response()->json([
                 'message' => 'New password must be different from your current password.'
             ], 422);
         }
 
         // Update password
-        $user->password = Hash::make($data['password']);
+        $user->password = Hash::make($data['new_password']);
         
         // Invalidate all remember tokens (force logout from other devices)
         $user->remember_token = null;
@@ -113,7 +113,7 @@ class UserController extends Controller
         RateLimiter::clear($key);
 
         return response()->json([
-            'message' => 'Password updated successfully'
+            'success' => true,
         ], 200);
     }
 }
