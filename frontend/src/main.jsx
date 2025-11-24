@@ -8,9 +8,7 @@ console.log('fetchCsrfToken');
 fetchCsrfToken()
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <UserProvider>
-      <App />
-    </UserProvider>
-  </React.StrictMode>,
+  <UserProvider>
+    <App />
+  </UserProvider>
 )

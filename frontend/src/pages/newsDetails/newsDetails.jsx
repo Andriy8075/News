@@ -25,7 +25,7 @@ const NewsDetail = () => {
       <div className="news-detail">
         <div className="container">
           <div className="not-found">
-            <h2>Новину не знайдено 😔</h2>
+            <h2>Почекайте хвилинку, шукаємо новину 😔</h2>
             <Link to="/" className="back-link">← Повернутися на головну</Link>
           </div>
         </div>
