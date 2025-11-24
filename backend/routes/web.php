@@ -22,4 +22,9 @@ Route::get('news/{id}', [NewsController::class, 'show'])->name('news.show');
 Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 Route::get('/categories/search', [CategoryController::class, 'search'])->name('categories.search');
 
+Route::group(['middleware' => 'auth'], function () {
+    Route::patch('/update-profile', [UserController::class, 'updateProfile'])->name('updateProfile');
+    Route::patch('/update-password', [UserController::class, 'updatePassword'])->name('updatePassword');
+});
+
 require __DIR__.'/auth.php';
