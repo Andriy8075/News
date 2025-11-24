@@ -15,6 +15,11 @@ class UserController extends Controller
     public function index()
     {
         $user = auth()->user();
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthenticated.'
+            ], 401);
+        }
         $userForResponse = UserConverter::toResponseArray($user);
         return response()->json([
             'user' => $userForResponse,
@@ -92,10 +97,10 @@ class UserController extends Controller
 
         // Update password
         $user->password = Hash::make($data['new_password']);
-        
+
         // Invalidate all remember tokens (force logout from other devices)
         $user->remember_token = null;
-        
+
         $user->save();
 
         // Regenerate session to invalidate old sessions
