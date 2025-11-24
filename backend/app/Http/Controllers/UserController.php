@@ -35,8 +35,10 @@ class UserController extends Controller
         }
 
         if (isset($data['email'])) {
-            $user->email = $data['email'];
-            $user->email_verified_at = null;
+            if ($user->email !== $data['email']) {
+                $user->email = $data['email'];
+                $user->email_verified_at = null;
+            }
         }
 
         $user->save();
