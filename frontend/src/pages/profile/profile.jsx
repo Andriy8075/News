@@ -9,14 +9,26 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const Profile = () => {
   const navigate = useNavigate();
   const { setUser } = useUser();
+  const[error, setError] = useState('')
+  const[success, setSuccess] = useState('')
+
+  let initialUser = null;
+  try {
+    const stored = localStorage.getItem('user');
+    if (stored) {
+      initialUser = JSON.parse(stored);
+    }
+  } catch (e) {
+    console.error('Failed to parse user from localStorage', e);
+  }
 
   const [userData, setUserData] = useState({
-    name: 'Іван Петренко',
-    email: 'ivan@example.com',
-    phone: '+380991234567',
+    name: initialUser?.name || '',
+    email: initialUser?.email || '',
     currentPassword: '',
     newPassword: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    emailVerified: initialUser?.email_verified || false,
   });
 
   const [activeTab, setActiveTab] = useState('profile');
@@ -29,24 +41,106 @@ const Profile = () => {
     }));
   };
 
-  const handleProfileSubmit = (e) => {
+  const handleProfileSubmit = async (e) => {
     e.preventDefault();
-    alert('Профіль оновлено!');
+
+    const { name, email } = userData;
+    const formData = { name, email, _method: 'PATCH' };
+    setSuccess('')
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/update-profile`, {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-XSRF-TOKEN': getCsrfTokenFromCookie(),
+        },
+        credentials: 'include',
+      });
+    
+      if (response.ok || response.status === 200) {
+        const responseData = await response.json();
+        localStorage.setItem('user', JSON.stringify(responseData.user));
+        setError('')
+        setSuccess('Дані профілю успішно змінено!')
+      } else {
+        console.error('Помилка при оновленні профілю:', response.status);
+        setError('Переконайтеся, що дані введено правильно!')
+      }
+    } catch (error) {
+      console.error('Помилка при оновленні профілю:', error);
+      setError('Переконайтеся, що дані введено правильно!')
+    }
   };
 
-  const handlePasswordSubmit = (e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    alert('Пароль змінено!');
-    setUserData(prev => ({
-      ...prev,
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: ''
-    }));
+
+    const { newPassword, currentPassword, confirmPassword } = userData;
+    let formError = true;
+    setSuccess('')
+  
+    if (newPassword === currentPassword) { 
+      setError('Пароль співпадає з старим паролем!');
+      formError = false;
+    }
+  
+    if (newPassword.length < 8 || currentPassword.length < 8 || confirmPassword.length < 8) {
+      setError('Введіть пароль повністю (більше 8 символів)!');
+      formError = false;
+    }
+  
+    if (newPassword !== confirmPassword) {
+      setError('Введіть правильний підтверджувальний пароль!');
+      formError = false;
+    }
+  
+    if (formError) { 
+      const formData = { 
+        new_password: newPassword, 
+        current_password: currentPassword, 
+        _method: 'PATCH' 
+      };
+  
+      try {
+        const response = await fetch(`${API_BASE_URL}/update-password`, {
+          method: 'POST',
+          body: JSON.stringify(formData),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-XSRF-TOKEN': getCsrfTokenFromCookie(),
+          },
+          credentials: 'include',
+        });
+      
+        if (response.ok || response.status === 200) {
+          setError('')
+          setSuccess('Пароль успішно змінено!')
+        } else {
+          console.error('Помилка при оновленні профілю:', response.status);
+          setError('Переконайтеся, що дані введено правильно!');
+        }
+      } catch (error) {
+        console.error('Помилка при оновленні профілю:', error);
+        setError('Переконайтеся, що дані введено правильно!');
+      }
+  
+      setUserData(prev => ({
+        ...prev,
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      }));
+    }
   };
+  
 
   const handleGoToMyNews = () => {
-    // перехід на сторінку з особистими новинами
     navigate('/my-news');
   };
 
@@ -62,30 +156,25 @@ const Profile = () => {
         },
         credentials: 'include',
       });
-  
+
       if (response.ok || response.status === 204) {
         localStorage.removeItem('user');
         localStorage.removeItem('token');
-        // Clear user from context
         setUser(null);
-        // Navigate to home page
         navigate('/');
       } else {
         console.error('Logout failed:', response.status);
-        // Still clear user and navigate even if request fails
         setUser(null);
         navigate('/');
       }
     } catch (error) {
       console.error('Logout error:', error);
-      // Still clear user and navigate even if request fails
       setUser(null);
       navigate('/');
     }
   };
 
-  const handleSendVerificationEmail = async (e) => {
-    e.preventDefault();
+  const handleSendVerificationEmail = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/email/verification-notification`, {
         method: 'POST',
@@ -98,48 +187,46 @@ const Profile = () => {
         credentials: 'include',
       });
       if (response.ok || response.status === 200) {
-        alert('Повідомлення для підтвердження email надіслано!');
+        setError('')
+        setSuccess('Повідомлення для підтвердження email надіслано!')
       } else {
         console.error('Помилка при надсиланні повідомлення для підтвердження email:', response.status);
-        alert('Помилка при надсиланні повідомлення для підтвердження email!');
+        setError('Помилка при надсиланні повідомлення для підтвердження email!');
       }
     } catch (error) {
       console.error('Помилка при надсиланні повідомлення для підтвердження email:', error);
-      alert('Помилка при надсиланні повідомлення для підтвердження email!');
+      setError('Помилка при надсиланні повідомлення для підтвердження email!');
     }
   };
-  
 
   return (
     <div className="profile">
       <div className="container">
         <h1 className="page-title">👤 Особистий кабінет</h1>
-        
+
         <div className="profile-layout">
           <div className="profile-sidebar">
-            <button 
+            <button
               className={`tab-button ${activeTab === 'profile' ? 'active' : ''}`}
               onClick={() => setActiveTab('profile')}
             >
               📝 Особиста інформація
             </button>
-            <button 
+            <button
               className={`tab-button ${activeTab === 'password' ? 'active' : ''}`}
               onClick={() => setActiveTab('password')}
             >
               🔒 Зміна паролю
             </button>
 
-            {/* Кнопка для переходу на сторінку особистих новин */}
-            <button 
+            <button
               className="tab-button"
               onClick={handleGoToMyNews}
             >
               📰 Мої новини
             </button>
 
-            {/* Кнопка логауту */}
-            <button 
+            <button
               className="tab-button logout-button"
               onClick={handleLogout}
             >
@@ -149,9 +236,9 @@ const Profile = () => {
 
           <div className="profile-content">
             {activeTab === 'profile' && (
-              <form onSubmit={handleProfileSubmit} className="profile-form">
+              <form className="profile-form" onSubmit={handleProfileSubmit}>
                 <h2>Особиста інформація</h2>
-                
+
                 <div className="form-group">
                   <label htmlFor="name">Ім'я та прізвище</label>
                   <input
@@ -173,33 +260,42 @@ const Profile = () => {
                     onChange={handleChange}
                   />
                 </div>
-                <form onSubmit={handleSendVerificationEmail}>
-                  <button type="submit" className="btn-primary">
-                    Надіслати повідомлення для підтвердження email
+
+                {error && (
+                  <div className="error-message">
+                    {error}
+                  </div>
+                )}
+                {success && (
+                  <div className="success-message">
+                    {success}
+                  </div>
+                )}
+                
+                <div className="btn-primary-container">
+                  {!userData.emailVerified && (
+                    <button
+                      type="button"
+                      className="btn-primary"
+                      onClick={handleSendVerificationEmail}
+                    >
+                      Надіслати повідомлення для підтвердження email
+                    </button>
+                  )}
+                  <button
+                    type="submit"
+                    className="btn-primary"
+                  >
+                    Зберегти зміни
                   </button>
-                </form>
-
-                <div className="form-group">
-                  <label htmlFor="phone">Номер телефону</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={userData.phone}
-                    onChange={handleChange}
-                  />
                 </div>
-
-                <button type="submit" className="btn-primary">
-                  Зберегти зміни
-                </button>
               </form>
             )}
 
             {activeTab === 'password' && (
               <form onSubmit={handlePasswordSubmit} className="profile-form">
                 <h2>Зміна паролю</h2>
-                
+
                 <div className="form-group">
                   <label htmlFor="currentPassword">Поточний пароль</label>
                   <input
@@ -235,6 +331,19 @@ const Profile = () => {
                     placeholder="Підтвердьте новий пароль"
                   />
                 </div>
+
+                
+                {error && (
+                  <div className="error-message">
+                    {error}
+                  </div>
+                )}
+                {success && (
+                  <div className="success-message">
+                    {success}
+                  </div>
+                )}
+                
 
                 <button type="submit" className="btn-primary">
                   Змінити пароль

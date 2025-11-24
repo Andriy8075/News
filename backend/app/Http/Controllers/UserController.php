@@ -72,7 +72,7 @@ class UserController extends Controller
 
         $data = $request->validate([
             'current_password' => 'required|string',
-            'new_password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'new_password' => ['required', Rules\Password::defaults()],
         ]);
 
         // Verify current password

@@ -10,6 +10,8 @@ import Register from './pages/auth/register';
 import Login from './pages/auth/login';
 import EditNews from './pages/editNews/editNews';
 import MyNews from './pages/myNews/myNews';
+import EmailVerified from './pages/auth/emailVerified';
+import ForgotPassword from './pages/auth/forgotPassword';
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/news/:id/edit" element={<EditNews />} />
             <Route path="/my-news" element={<MyNews />} />
+            <Route path="/email-verified" element={<EmailVerified />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
           </Routes>
         </main>
       </div>
