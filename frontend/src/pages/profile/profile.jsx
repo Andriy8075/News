@@ -83,6 +83,31 @@ const Profile = () => {
       navigate('/');
     }
   };
+
+  const handleSendVerificationEmail = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${API_BASE_URL}/email/verification-notification`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-XSRF-TOKEN': getCsrfTokenFromCookie(),
+        },
+        credentials: 'include',
+      });
+      if (response.ok || response.status === 200) {
+        alert('Повідомлення для підтвердження email надіслано!');
+      } else {
+        console.error('Помилка при надсиланні повідомлення для підтвердження email:', response.status);
+        alert('Помилка при надсиланні повідомлення для підтвердження email!');
+      }
+    } catch (error) {
+      console.error('Помилка при надсиланні повідомлення для підтвердження email:', error);
+      alert('Помилка при надсиланні повідомлення для підтвердження email!');
+    }
+  };
   
 
   return (
@@ -148,6 +173,11 @@ const Profile = () => {
                     onChange={handleChange}
                   />
                 </div>
+                <form onSubmit={handleSendVerificationEmail}>
+                  <button type="submit" className="btn-primary">
+                    Надіслати повідомлення для підтвердження email
+                  </button>
+                </form>
 
                 <div className="form-group">
                   <label htmlFor="phone">Номер телефону</label>
