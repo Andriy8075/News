@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use App\Converters\UserConverter;
 
 class RegisteredUserController extends Controller
 {
@@ -37,9 +38,8 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         $toReturn = [
-            'user' => $user,
+            'user' => UserConverter::toResponseArray($user),
         ];
-        $toReturn['user']['editor'] = false;
 
         return response()->json($toReturn, 201);
     }
