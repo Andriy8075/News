@@ -45,6 +45,11 @@ const Profile = () => {
     }));
   };
 
+  const handleGoToMyNews = () => {
+    // перехід на сторінку з особистими новинами
+    navigate('/my-news');
+  };
+
   const handleLogout = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/logout`, {
@@ -57,8 +62,10 @@ const Profile = () => {
         },
         credentials: 'include',
       });
-
+  
       if (response.ok || response.status === 204) {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
         // Clear user from context
         setUser(null);
         // Navigate to home page
@@ -76,11 +83,7 @@ const Profile = () => {
       navigate('/');
     }
   };
-
-  const handleGoToMyNews = () => {
-    // перехід на сторінку з особистими новинами
-    navigate('/my-news');
-  };
+  
 
   return (
     <div className="profile">
