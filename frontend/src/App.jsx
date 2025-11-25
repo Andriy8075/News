@@ -12,6 +12,7 @@ import EditNews from './pages/editNews/editNews';
 import MyNews from './pages/myNews/myNews';
 import EmailVerified from './pages/auth/emailVerified';
 import ForgotPassword from './pages/auth/forgotPassword';
+import ResetPassword from './pages/auth/resetPassword';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/my-news" element={<MyNews />} />
             <Route path="/email-verified" element={<EmailVerified />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/password-reset/:token" element={<ResetPassword />} />
           </Routes>
         </main>
       </div>
