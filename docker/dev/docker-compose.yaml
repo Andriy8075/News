@@ -13,8 +13,8 @@ services:
       - "8000:8000"
       - "5173:5173"
     volumes:
-      - ../:/var/www
-    command: ["sh", "./docker/entrypoint.sh"]
+      - ../../:/var/www
+    command: ["sh", "/var/www/docker/dev/entrypoint.sh"]
     networks:
       - application
     depends_on:
