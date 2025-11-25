@@ -75,6 +75,30 @@
     }
 
     .profile-form {
+      .error-message {
+        background-color: #fee;
+        border: 0.2vw solid #fcc;
+        color: #c33;
+        padding: 1vw;
+        border-radius: 1.2vw;
+        margin-bottom: 2vw;
+        font-size: 1.1vw;
+        text-align: center;
+      }
+      .success-message {
+        background-color: rgb(192, 248, 190);
+        border: 0.2vw solid rgb(121, 245, 84);
+        color: rgb(22, 114, 4);
+        padding: 1vw;
+        border-radius: 1.2vw;
+        margin-bottom: 2vw;
+        font-size: 1.1vw;
+        text-align: center;
+      }
+      .btn-primary-container{
+        display: flex;
+        gap: 3vw;
+      }
       .form-group {
         margin-bottom: 2vw;
 

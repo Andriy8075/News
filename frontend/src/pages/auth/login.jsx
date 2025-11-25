@@ -28,13 +28,11 @@ const Login = () => {
         const responseData = await response.json();
 
         if (responseData.user) {
-          // зберігаємо юзера в localStorage
           localStorage.setItem('user', JSON.stringify(responseData.user));
         } else {
           localStorage.removeItem('user');
         }
 
-        // якщо бекенд повертає токен — можеш зберегти і його
         if (responseData.token) {
           localStorage.setItem('token', responseData.token);
         }
@@ -118,6 +116,10 @@ const Login = () => {
               <button type="submit" className="btn-primary">
                 Увійти
               </button>
+
+              <div className="auth-link">
+                <Link to="/forgot-password">Забули пароль?</Link>
+              </div>
 
               <div className="auth-link">
                 Ще не маєте акаунту?{' '}
