@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import NewsFeed from '../newsFeed/NewsFeed';
+import NewsFeed from '../newsFeed/newsFeed';
 import ConfirmModal from '../../components/confirmModel/confirmModal';
 import { deleteNews } from '../../utils/deleteNews';
 
