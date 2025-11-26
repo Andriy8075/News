@@ -1,0 +1,10 @@
+backend/public/storage
+backend/storage/app/public
+backend/vendor
+node_modules
+docker/dev/storage
+.git
+.gitignore
+docker/prod/*.md
+
+

@@ -1,0 +1,46 @@
+FROM php:8.4-fpm
+
+# Set working directory to backend
+WORKDIR /var/www/backend
+
+# Install system dependencies and PHP extensions
+RUN apt-get update && apt-get install -y \
+    curl \
+    unzip \
+    libpq-dev \
+    libonig-dev \
+    libssl-dev \
+    libxml2-dev \
+    libcurl4-openssl-dev \
+    libicu-dev \
+    libzip-dev \
+    && docker-php-ext-install -j"$(nproc)" \
+    pdo_mysql \
+    pdo_pgsql \
+    pgsql \
+    opcache \
+    intl \
+    zip \
+    bcmath \
+    soap \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Copy backend application code (including composer.json/lock and artisan)
+COPY backend/ .
+
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+
+# Set proper permissions (adjust if you use a different user)
+RUN chown -R www-data:www-data /var/www/backend
+
+# Expose PHP-FPM port
+EXPOSE 8060
+
+COPY docker/prod/entrypoint.sh /var/www/backend/entrypoint.sh
+# Start PHP-FPM (to be used behind an external web server like Nginx)
+ENTRYPOINT ["bash", "entrypoint.sh"]
