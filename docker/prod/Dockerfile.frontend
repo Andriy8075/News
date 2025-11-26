@@ -7,6 +7,11 @@ COPY frontend/package*.json ./
 RUN npm install
 
 COPY frontend/ .
+
+RUN if [ -f .env.frontend ]; then \
+      cp .env.frontend .env; \
+    fi
+
 RUN npm run build
 
 ############################
