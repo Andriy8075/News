@@ -3,6 +3,8 @@ import NewsCard from '../../components/newsCard/newsCard';
 import SearchBar from '../../components/searchBar/searchBar';
 import './newsFeed.scss';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const PER_PAGE = 6;
 
 const NewsFeed = ({
@@ -36,7 +38,7 @@ const NewsFeed = ({
     try {
       setLoading(true);
 
-      let urlRequest = `http://localhost:8000/news?page=${pageToLoad}&perPage=${perPage || PER_PAGE}&search=${search}`;
+      let urlRequest = `${API_BASE_URL}/news?page=${pageToLoad}&perPage=${perPage || PER_PAGE}&search=${search}`;
 
       if (type !== 'allNews') {
         // наприклад, бек фільтрує створені юзером новини за type=created
