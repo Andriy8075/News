@@ -6,5 +6,6 @@ docker/dev/storage
 .git
 .gitignore
 docker/prod/*.md
-
+backend/.env
+backend/.env.development
 
