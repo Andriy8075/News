@@ -8,6 +8,8 @@ RUN npm install
 
 COPY frontend/ .
 
+ENV VITE_API_BASE_URL=https://news-7backend.onrender.com
+
 RUN npm run build
 
 ############################
