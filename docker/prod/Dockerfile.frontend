@@ -8,13 +8,8 @@ RUN npm install
 
 COPY frontend/ .
 
-RUN if [ -f .env.frontend ]; then \
-      cp .env.frontend .env; \
-    fi
+ENV VITE_API_BASE_URL=https://news-grj6.onrender.com
 
-RUN if [ -f /etc/secrets/.env.frontend ]; then \
-      cp /etc/secrets/.env.frontend /app/frontend/.env; \
-    fi
 
 
 RUN npm run build
