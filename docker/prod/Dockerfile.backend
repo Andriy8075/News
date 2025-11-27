@@ -32,6 +32,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Copy backend application code (including composer.json/lock and artisan)
 COPY backend/ .
 
+RUN if [ ! -f .env ]; then cp .env.example .env; fi
+
 # Install dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
 
