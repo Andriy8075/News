@@ -1,0 +1,65 @@
+networks:
+  application:
+    driver: bridge
+
+services:
+  frontend:
+    build:
+      context: ../..
+      dockerfile: docker/prod/Dockerfile.frontend
+    container_name: news_frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"          # Nginx serving built React app
+    depends_on:
+      - backend
+    networks:
+      - application
+
+  backend:
+    build:
+      context: ../..
+      dockerfile: docker/prod/Dockerfile.backend
+    container_name: news_backend
+    restart: unless-stopped
+    working_dir: /var/www/backend
+    environment:
+      # Laravel DB configuration
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=backend
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      # Common Laravel production flags (override via .env if needed)
+      - APP_ENV=production
+      - APP_DEBUG=false
+    ports:
+      - "8060:8060"      # Laravel app (php artisan serve) from entrypoint.sh
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - application
+
+  db:
+    image: mysql:8.0
+    container_name: news_db
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=backend
+    ports:
+      - "3306:3306"
+    volumes:
+      # Persist MySQL data for prod; adjust path if you prefer another location
+      - ./storage/mysql:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -u root -proot || exit 1" ]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    networks:
+      - application
+
+

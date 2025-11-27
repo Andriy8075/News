@@ -1,5 +1,5 @@
-php artisan key:generate
-php artisan migrate
+php artisan key:generate --force
+php artisan migrate --force
 php artisan storage:link
 php artisan route:cache
 php artisan config:cache
