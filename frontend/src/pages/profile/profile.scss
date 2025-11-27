@@ -95,6 +95,7 @@
         font-size: 1.1vw;
         text-align: center;
       }
+
       .btn-primary-container{
         display: flex;
         gap: 3vw;
@@ -161,6 +162,10 @@
       }
 
       .profile-form {
+        .btn-primary{
+          padding: 2vw;
+          font-size: 2.5vw;
+        }
         .form-group {
           margin-bottom: 4vw;
 
