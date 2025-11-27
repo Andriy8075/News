@@ -31,8 +31,10 @@
   .nav {
     display: flex;
     gap: 2vw;
+    flex-direction: row;
     align-items: center;
     min-height: 46.25px;
+    flex-wrap: wrap;
 
     &-link {
       color: white;
@@ -73,6 +75,7 @@
 
     .nav {
       gap: 3vw;
+      justify-content: center;
       
       &-link {
         font-size: 3vw;
