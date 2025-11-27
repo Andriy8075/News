@@ -23,9 +23,13 @@ const Login = () => {
 
     try {
       const response = await makeAuthRequest('login', formData);
+        console.log('response from login: ', response)
 
       if (response.ok) {
         const responseData = await response.json();
+        console.log('datafrom login: ', responseData)
+
+          localStorage.setItem('api_token', responseData.api_token);
 
         if (responseData.user) {
           localStorage.setItem('user', JSON.stringify(responseData.user));

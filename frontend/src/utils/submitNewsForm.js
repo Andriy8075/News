@@ -19,8 +19,9 @@ export const submitNewsForm = async (formData, endpoint, method = 'POST') => {
     body: formDataToSend,
     headers: {
       'Accept': 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
-      'X-XSRF-TOKEN': token,
+      //'X-Requested-With': 'XMLHttpRequest',
+      'api_token': localStorage.api_token,
+      //'X-XSRF-TOKEN': token,
     },
     credentials: 'include',
   });

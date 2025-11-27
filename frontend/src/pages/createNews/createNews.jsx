@@ -31,7 +31,7 @@ const CreateNews = () => {
     setIsSubmitting(true);
 
     try {
-      const responseData = await submitNewsForm(formData, '/news/store', 'POST');
+      const responseData = await submitNewsForm(formData, '/api/news/store?api_token=' + localStorage.api_token, 'POST');
       alert('Новину успішно створено!');
       navigate(`/news/${responseData.data?.id || responseData.id}`);
     } catch (error) {

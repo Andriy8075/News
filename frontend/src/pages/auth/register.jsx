@@ -37,6 +37,7 @@ const Register = () => {
     try {
       const response = await makeAuthRequest('register', submitData);
 
+        console.log('response: ', response)
       if (response.ok) {
         const responseData = await response.json();
 

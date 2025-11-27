@@ -1,11 +1,14 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 
-Route::get('/user', [UserController::class, 'index'])->name('user.index');
+Route::get('/', function () {
+    return redirect(route('login'));
+});
 
 Route::group(['middleware' => 'editor'], function () {
     Route::post('/news/store', [NewsController::class, 'store'])->middleware('editor')->name('news.store');
@@ -28,3 +31,4 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 require __DIR__.'/auth.php';
+

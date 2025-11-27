@@ -38,7 +38,7 @@ const NewsFeed = ({
     try {
       setLoading(true);
 
-      let urlRequest = `${API_BASE_URL}/news?page=${pageToLoad}&perPage=${perPage || PER_PAGE}&search=${search}`;
+      let urlRequest = `${API_BASE_URL}/api/news?api_token=${localStorage.api_token}&page=${pageToLoad}&perPage=${perPage || PER_PAGE}&search=${search}`;
 
       if (type !== 'allNews') {
         // наприклад, бек фільтрує створені юзером новини за type=created
@@ -47,6 +47,7 @@ const NewsFeed = ({
 
       const response = await fetch(urlRequest);
       data = await response.json();
+      console.log('data: ', data)
     } finally {
       setLoading(false);
       return data;

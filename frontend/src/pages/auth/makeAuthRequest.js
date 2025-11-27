@@ -4,7 +4,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 export async function makeAuthRequest(type, formData) {
     console.log('makeAuthRequest');
-    return await fetch(`${API_BASE_URL}/${type}`, {
+    return await fetch(`${API_BASE_URL}/api/${type}`, {
         method: 'POST',
         body: JSON.stringify(formData),
         headers: { 
