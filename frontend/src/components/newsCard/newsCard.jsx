@@ -3,15 +3,22 @@ import { Link } from 'react-router-dom';
 import './newsCard.scss';
 
 const NewsCard = ({ news, onEdit, onDelete }) => {
+  console.log(news)
   return (
     <div className="news-card">
       <Link to={`/news/${news.id}`} className="news-card-link">
         <div className="news-image-container">
-          <img 
-            src={news.image} 
-            alt={news.title}
-            className="news-image"
-          />
+          {news.image ? (
+            <img 
+              src={news.image} 
+              alt={news.title}
+              className="news-image"
+            />
+          ) : (
+            <div className="news-image news-image--placeholder">
+              📰
+            </div>
+          )}
           <div className="news-category">{news.category}</div>
         </div>
         

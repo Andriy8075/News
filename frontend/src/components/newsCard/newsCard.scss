@@ -24,6 +24,14 @@
     overflow: hidden;
     height: 25vw;
 
+    .news-image--placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5vw; 
+      background: #764ba2;
+    }
+
     .news-image {
       width: 100%;
       height: 100%;
@@ -101,6 +109,7 @@
     .news-actions {
       margin-top: 1.5vw;
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between; // Розкидає кнопки по ширині
       gap: 1vw;
 
@@ -133,6 +142,7 @@
 
 @media (max-width: 768px) {
   .news-card {
+    width: 48%;
     margin-bottom: 4vw;
     border-radius: 3vw;
 
@@ -175,11 +185,19 @@
         margin-top: 3vw;
 
         button {
+          flex: auto;
+          width: 100%;
           font-size: 3vw;
           padding: 2vw 0;
           border-radius: 2vw;
         }
       }
     }
+  }
+}
+
+@media (max-width: 400px) {
+  .news-card {
+    width: 100%;
   }
 }
