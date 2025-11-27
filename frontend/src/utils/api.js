@@ -44,28 +44,29 @@ export async function fetchCsrfToken() {
   if (tokneInCookie) {
     return tokneInCookie;
   }
+  console.log('csrf and cookie are not fetched');
 
   // Only fetch if token doesn't exist
-  try {
-    const response = await fetch(`${API_BASE_URL}/sanctum/csrf-cookie`, {
-      method: 'GET',
-      credentials: 'include', // Important: include cookies
-      headers: {
-        'Accept': 'application/json',
-      },
-    });
+  // try {
+  //   const response = await fetch(`${API_BASE_URL}/sanctum/csrf-cookie`, {
+  //     method: 'GET',
+  //     credentials: 'include', // Important: include cookies
+  //     headers: {
+  //       'Accept': 'application/json',
+  //     },
+  //   });
 
-    if (response.ok) {
-      // Extract token from cookie
-      return getCsrfTokenFromCookie();
-    } else {
-      console.error('Failed to fetch CSRF token:', response.status);
-      return null;
-    }
-  } catch (error) {
-    console.error('Error fetching CSRF token:', error);
-    return null;
-  }
+  //   if (response.ok) {
+  //     // Extract token from cookie
+  //     return getCsrfTokenFromCookie();
+  //   } else {
+  //     console.error('Failed to fetch CSRF token:', response.status);
+  //     return null;
+  //   }
+  // } catch (error) {
+  //   console.error('Error fetching CSRF token:', error);
+  //   return null;
+  // }
 }
 
 export async function fetchUser() {
