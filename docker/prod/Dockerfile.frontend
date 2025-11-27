@@ -8,6 +8,9 @@ RUN npm install
 
 COPY frontend/ .
 
+# Ensure .env exists (copy example if missing)
+RUN if [ ! -f .env ]; then cp .env.example .env; fi
+
 RUN npm run build
 
 ############################
