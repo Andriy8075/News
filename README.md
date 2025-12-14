@@ -12,3 +12,5 @@ cd News/docker/prod
 docker-compose up
 ```
 These commands will clone git repo, cd to folder with docker production build and launch docker-compose build.
+
+The app will be runing on http://localhost
