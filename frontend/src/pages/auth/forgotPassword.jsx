@@ -32,25 +32,25 @@ const ForgotPassword = () => {
     
       if (response.ok || response.status === 200) {
         setError('')
-        setSuccess('Запит успішний. Вам надіслано лист на електронну пошту!')
+        setSuccess('Request successful. An email has been sent to you!')
       } else {
-        setError('Введіть правельні дані. Щось пішло не так!')
+        setError('Please enter correct data. Something went wrong!')
         
       }
     } catch (error) {
-      setError('Введіть правельні дані. Щось пішло не так!')
+      setError('Please enter correct data. Something went wrong!')
     }
   };
 
   return (
     <div className="auth">
       <div className="container">
-        <h1 className="page-title">Відновлення паролю</h1>
+        <h1 className="page-title">Password recovery</h1>
 
         <div className="auth-card">
           <div className="auth-header">
-            <h2>Забули пароль?</h2>
-            <p>Введіть email, і ми надішлемо інструкції для його відновлення.</p>
+            <h2>Forgot password?</h2>
+            <p>Enter your email and we'll send you instructions to recover it.</p>
           </div>
 
           <form onSubmit={handleSendEmail} className="auth-form">
@@ -67,7 +67,7 @@ const ForgotPassword = () => {
             )}
 
             <div className="form-group">
-              <label htmlFor="email">Email адреса</label>
+              <label htmlFor="email">Email address</label>
               <input
                 type="email"
                 id="email"
@@ -82,7 +82,7 @@ const ForgotPassword = () => {
 
             <div className="auth-actions">
               <button type="submit" className="btn-primary">
-                Надіслати інструкції
+                Send instructions
               </button>
             </div>
           </form>

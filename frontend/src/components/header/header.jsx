@@ -15,7 +15,7 @@ const Header = () => {
       const token = getCsrfTokenTimeFromCookie();
 
       if (!token) {
-        // кука XSRF-TOKEN пропала або не створена
+        // XSRF-TOKEN cookie is missing or not created
         localStorage.removeItem('user');
         localStorage.removeItem('token');
         setUser(null);
@@ -84,7 +84,7 @@ const Header = () => {
             to="/"
             className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
           >
-            🏠 Головна
+            🏠 Home
           </Link>
 
           {user?.editor && (
@@ -92,7 +92,7 @@ const Header = () => {
               to="/create"
               className={`nav-link ${location.pathname === '/create' ? 'active' : ''}`}
             >
-              ✨ Створити
+              ✨ Create
             </Link>
           )}
 
@@ -102,14 +102,14 @@ const Header = () => {
                 to="/profile"
                 className={`nav-link ${location.pathname === '/profile' ? 'active' : ''}`}
               >
-                👤 Профіль
+                👤 Profile
               </Link>
               <Link
                 type="button"
                 className={`nav-link active`}
                 onClick={handleLogout}
               >
-                🚪 Вийти
+                🚪 Logout
               </Link>
             </>
           )}
@@ -119,7 +119,7 @@ const Header = () => {
               to="/login"
               className={`nav-link ${location.pathname === '/login' ? 'active' : ''}`}
             >
-              🔑 Увійти
+              🔑 Sign in
             </Link>
           )}
         </nav>

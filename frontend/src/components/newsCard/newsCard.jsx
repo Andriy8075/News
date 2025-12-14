@@ -29,7 +29,7 @@ const NewsCard = ({ news, onEdit, onDelete }) => {
           <div className="news-meta">
             <span className="news-author">👤 {news.author}</span>
             <span className="news-date">
-              📅 {new Date(news.date).toLocaleDateString('uk-UA')}
+              📅 {new Date(news.date).toLocaleDateString('en-US')}
             </span>
           </div>
           
@@ -42,12 +42,12 @@ const NewsCard = ({ news, onEdit, onDelete }) => {
             <div className="news-actions">
               {onEdit && (
                 <button className="edit-btn" onClick={(e) => { e.preventDefault(); onEdit(news.id); }}>
-                  ✏️ Редагувати
+                  ✏️ Edit
                 </button>
               )}
               {onDelete && (
                 <button className="delete-btn" onClick={(e) => { e.preventDefault(); onDelete(news.id); }}>
-                  🗑️ Видалити
+                  🗑️ Delete
                 </button>
               )}
             </div>

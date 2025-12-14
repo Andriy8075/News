@@ -61,7 +61,7 @@ const ResetPassword = () => {
       });
 
       if (response.ok || response.status === 200) {
-        setSuccess('Пароль успішно змінено! Перенаправлення на сторінку входу...');
+        setSuccess('Password changed successfully! Redirecting to login page...');
         setTimeout(() => {
           navigate('/login');
         }, 2000);
@@ -71,27 +71,27 @@ const ResetPassword = () => {
           if (errorData.errors) {
             setErrors(errorData.errors);
           } else {
-            setErrors({ general: ['Помилка валідації'] });
+            setErrors({ general: ['Validation error'] });
           }
         } else {
-          setErrors({ general: ['Помилка при зміні паролю. Можливо, посилання недійсне або застаріле.'] });
+          setErrors({ general: ['Error changing password. The link may be invalid or expired.'] });
         }
       }
     } catch (error) {
       console.error('Reset password error:', error);
-      setErrors({ general: ['Помилка підключення до сервера'] });
+      setErrors({ general: ['Server connection error'] });
     }
   };
 
   return (
     <div className="auth">
       <div className="container">
-        <h1 className="page-title">Відновлення паролю</h1>
+        <h1 className="page-title">Password recovery</h1>
 
         <div className="auth-card">
           <div className="auth-header">
-            <h2>Встановіть новий пароль</h2>
-            <p>Введіть новий пароль для вашого акаунту</p>
+            <h2>Set a new password</h2>
+            <p>Enter a new password for your account</p>
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
@@ -108,14 +108,14 @@ const ResetPassword = () => {
             )}
 
             <div className="form-group">
-              <label htmlFor="password">Новий пароль</label>
+              <label htmlFor="password">New password</label>
               <input
                 type="password"
                 id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Введіть новий пароль"
+                placeholder="Enter new password"
                 required
                 className={errors.password ? 'error' : ''}
               />
@@ -127,14 +127,14 @@ const ResetPassword = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password_confirmation">Підтвердіть пароль</label>
+              <label htmlFor="password_confirmation">Confirm password</label>
               <input
                 type="password"
                 id="password_confirmation"
                 name="password_confirmation"
                 value={formData.password_confirmation}
                 onChange={handleChange}
-                placeholder="Підтвердіть новий пароль"
+                placeholder="Confirm new password"
                 required
                 className={errors.password_confirmation ? 'error' : ''}
               />
@@ -147,11 +147,11 @@ const ResetPassword = () => {
 
             <div className="auth-actions">
               <button type="submit" className="btn-primary">
-                Змінити пароль
+                Change password
               </button>
 
               <div className="auth-link">
-                <Link to="/login">Повернутися до входу</Link>
+                <Link to="/login">Back to login</Link>
               </div>
             </div>
           </form>

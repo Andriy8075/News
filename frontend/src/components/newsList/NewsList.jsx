@@ -12,14 +12,14 @@ const NewsList = ({
   onDelete,
   onLoadMore,
   hasMore,
-  emptyMessage = 'Нічого не знайдено',
-  emptySubMessage = 'Спробуйте змінити пошуковий запит',
+  emptyMessage = 'Nothing found',
+  emptySubMessage = 'Try changing your search query',
 }) => {
   const sentinelRef = useRef(null);
   const loadingRef = useRef(loading);
   const hasMoreRef = useRef(hasMore);
 
-  // завжди оновлюємо рефи при зміні пропсів
+  // always update refs when props change
   useEffect(() => {
     loadingRef.current = loading;
     hasMoreRef.current = hasMore;
@@ -72,7 +72,7 @@ const NewsList = ({
 
         {loading && (
           <div className="loading">
-            <p>Завантаження новин...</p>
+            <p>Loading news...</p>
           </div>
         )}
 

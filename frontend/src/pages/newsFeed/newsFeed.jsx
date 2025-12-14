@@ -9,7 +9,7 @@ const PER_PAGE = 6;
 
 const NewsFeed = ({
   type = 'allNews',          
-  title = '📰 Останні новини',
+  title = '📰 Latest news',
   enableActions = false,    
   onEdit,                   
   onDelete,                
@@ -24,13 +24,13 @@ const NewsFeed = ({
   const loadingRef = useRef(loading);
   const hasMoreRef = useRef(!lastPage);
 
-  // оновлюємо рефи, щоб IntersectionObserver бачив актуальні значення
+  // update refs so IntersectionObserver sees current values
   useEffect(() => {
     loadingRef.current = loading;
     hasMoreRef.current = !lastPage;
   }, [loading, lastPage]);
 
-  // ⚙️ "запит" до сервера 
+  // ⚙️ server request 
   const loadData = async (pageToLoad, search, perPage = null) => {
     let data;
     search = search.toLowerCase();
@@ -41,7 +41,7 @@ const NewsFeed = ({
       let urlRequest = `${API_BASE_URL}/news?page=${pageToLoad}&perPage=${perPage || PER_PAGE}&search=${search}`;
 
       if (type !== 'allNews') {
-        // наприклад, бек фільтрує створені юзером новини за type=created
+        // for example, backend filters user-created news by type=created
         urlRequest += '&type=created';
       }
 
@@ -53,7 +53,7 @@ const NewsFeed = ({
     }
   };
 
-  // 🔍 пошук 
+  // 🔍 search 
   const handleSearch = (searchValue) => {
     const value = searchValue.trim();
     setSearchRequest(value);
@@ -68,7 +68,7 @@ const NewsFeed = ({
     });
   };
 
-  // ♾ догрузка новин при скролі
+  // ♾ load more news on scroll
   const handleLoadMore = useCallback(() => {
     if (loadingRef.current || !hasMoreRef.current) return;
 
@@ -85,7 +85,7 @@ const NewsFeed = ({
     });
   }, [page, searchRequest]);
 
-  // IntersectionObserver для нескінченної підгрузки
+  // IntersectionObserver for infinite loading
   const observerCallback = useCallback(
     (entries) => {
       const first = entries[0];
@@ -113,7 +113,7 @@ const NewsFeed = ({
     };
   }, [observerCallback]);
 
-  // перше завантаження
+  // initial load
   useEffect(() => {
     handleSearch('');
   }, [type]); 
@@ -138,14 +138,14 @@ const NewsFeed = ({
 
         {loading && (
           <div className="loading">
-            <p>Завантаження новин...</p>
+            <p>Loading news...</p>
           </div>
         )}
 
         {newsList.length === 0 && !loading && (
           <div className="no-results">
-            <h3>😔 Нічого не знайдено</h3>
-            <p>Спробуйте змінити пошуковий запит</p>
+            <h3>😔 Nothing found</h3>
+            <p>Try changing your search query</p>
           </div>
         )}
 

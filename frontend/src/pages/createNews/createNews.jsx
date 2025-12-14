@@ -32,13 +32,13 @@ const CreateNews = () => {
 
     try {
       const responseData = await submitNewsForm(formData, '/news/store', 'POST');
-      alert('Новину успішно створено!');
+      alert('News created successfully!');
       navigate(`/news/${responseData.data?.id || responseData.id}`);
     } catch (error) {
       if (error.status === 422) {
         setErrors(error.errors);
       } else {
-        setErrors({ general: ['Помилка підключення до сервера'] });
+        setErrors({ general: ['Server connection error'] });
       }
     } finally {
       setIsSubmitting(false);
@@ -48,7 +48,7 @@ const CreateNews = () => {
   return (
     <div className="create-news">
       <div className="container">
-        <h1 className="page-title">✨ Створити новину</h1>
+        <h1 className="page-title">✨ Create news</h1>
 
         <NewsForm
           formData={formData}
@@ -65,7 +65,7 @@ const CreateNews = () => {
           handleImageChange={handleImageChange}
           handleCategorySearchChange={handleCategorySearchChange}
           handleCategorySelect={handleCategorySelect}
-          submitButtonText="Опублікувати новину"
+          submitButtonText="Publish news"
         />
       </div>
     </div>

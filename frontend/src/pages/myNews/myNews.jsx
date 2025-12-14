@@ -41,7 +41,7 @@ const MyNews = () => {
       <NewsFeed
         key={refreshKey}       
         type="created"
-        title="📰 Мої новини"
+        title="📰 My news"
         enableActions={true}
         onEdit={handleEdit}
         onDelete={handleDeleteClick}
@@ -49,8 +49,8 @@ const MyNews = () => {
 
       <ConfirmModal
         isOpen={isModalOpen}
-        title="Підтвердження видалення"
-        message="Ви дійсно хочете видалити цю новину?"
+        title="Confirm deletion"
+        message="Do you really want to delete this news?"
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
       />

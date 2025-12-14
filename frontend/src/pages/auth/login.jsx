@@ -44,27 +44,27 @@ const Login = () => {
           if (errorData.errors) {
             setErrors(errorData.errors);
           } else {
-            setErrors({ general: ['Помилка валідації'] });
+            setErrors({ general: ['Validation error'] });
           }
         } else {
-          setErrors({ general: ['Помилка при вході! Перевірте дані.'] });
+          setErrors({ general: ['Login error! Please check your credentials.'] });
         }
       }
     } catch (error) {
       console.error('Login error:', error);
-      setErrors({ general: ['Помилка підключення до сервера'] });
+      setErrors({ general: ['Server connection error'] });
     }
   };
 
   return (
     <div className="auth">
       <div className="container">
-        <h1 className="page-title">🔑 Вхід до акаунту</h1>
+        <h1 className="page-title">🔑 Login</h1>
 
         <div className="auth-card">
           <div className="auth-header">
-            <h2>Ласкаво просимо назад</h2>
-            <p>Увійдіть, щоб продовжити роботу з сервісом</p>
+            <h2>Welcome back</h2>
+            <p>Sign in to continue using the service</p>
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
@@ -75,7 +75,7 @@ const Login = () => {
             )}
 
             <div className="form-group">
-              <label htmlFor="email">Email адреса</label>
+              <label htmlFor="email">Email address</label>
               <input
                 type="email"
                 id="email"
@@ -94,14 +94,14 @@ const Login = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">Пароль</label>
+              <label htmlFor="password">Password</label>
               <input
                 type="password"
                 id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Введіть пароль"
+                placeholder="Enter password"
                 required
                 className={errors.password ? 'error' : ''}
               />
@@ -114,16 +114,16 @@ const Login = () => {
 
             <div className="auth-actions">
               <button type="submit" className="btn-primary">
-                Увійти
+                Sign in
               </button>
 
               <div className="auth-link">
-                <Link to="/forgot-password">Забули пароль?</Link>
+                <Link to="/forgot-password">Forgot password?</Link>
               </div>
 
               <div className="auth-link">
-                Ще не маєте акаунту?{' '}
-                <Link to="/register">Зареєструватися</Link>
+                Don't have an account?{' '}
+                <Link to="/register">Sign up</Link>
               </div>
             </div>
           </form>

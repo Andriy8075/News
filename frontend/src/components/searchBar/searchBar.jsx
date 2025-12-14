@@ -15,13 +15,13 @@ const SearchBar = ({ onSearch }) => {
         <div className="search-input-container">
           <input
             type="text"
-            placeholder="🔍 Пошук новин..."
+            placeholder="🔍 Search news..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
           <button type="submit" className="search-button">
-            Знайти
+            Search
           </button>
         </div>
       </form>

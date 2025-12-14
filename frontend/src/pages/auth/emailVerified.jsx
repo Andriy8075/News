@@ -36,17 +36,17 @@ const EmailVerified = () => {
         localStorage.setItem('user', JSON.stringify(responseData.user));
         
         if(responseData.user.email_verified){
-          setSuccess('Електронну адресу підтверджено!')
+          setSuccess('Email address verified!')
         }else{
-          setSuccess('Щось сталось не так, спробуйте знову!')
+          setSuccess('Something went wrong, please try again!')
         }
         
       } else {
-        console.error('Помилка при верифікації:', response.status);
+        console.error('Verification error:', response.status);
         
       }
     } catch (error) {
-      console.error('Помилка при верифікації:', error);
+      console.error('Verification error:', error);
     }
   };
 
@@ -57,12 +57,12 @@ const EmailVerified = () => {
   return (
     <div className="auth">
       <div className="container">
-        <h1 className="page-title">Дякуємо за підтвердження електронної пошти</h1>
+        <h1 className="page-title">Thank you for verifying your email</h1>
 
         <div className="auth-card">
           <div className="auth-header">
-            <h2>Вітаємо!</h2>
-            <p>Триває перевірка підтвердження пошти. Зачекайте одну секунду!</p>
+            <h2>Welcome!</h2>
+            <p>Verifying email confirmation. Please wait a moment!</p>
   
             {success && (
               <p>{success}</p>
@@ -78,7 +78,7 @@ const EmailVerified = () => {
                   className="btn-primary"
                   onClick={handleGoHome}
                 >
-                  Перейти на головну
+                  Go to home
                 </button>
               )}
             </div>

@@ -72,13 +72,13 @@
         }
 
         .btn-add-category {
-          /* вигляд як у btn-secondary, але менший розмір */
+          /* looks like btn-secondary, but smaller size */
           padding: 1.2vw 1.5vw;
           font-size: 1.1vw;
           border-radius: 1.2vw;
           white-space: nowrap;
 
-          /* при hover – як кнопка "Опублікувати" */
+          /* on hover - like "Publish" button */
           &:hover {
             background: var(--primary-gradient);
             color: #fff;

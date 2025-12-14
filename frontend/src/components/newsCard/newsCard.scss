@@ -110,11 +110,11 @@
       margin-top: 1.5vw;
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between; // Розкидає кнопки по ширині
+      justify-content: space-between; // Spread buttons across width
       gap: 1vw;
 
       button {
-        flex: 1; // Кнопки займають однаковий простір
+        flex: 1; // Buttons take equal space
         padding: 0.8vw 1vw;
         border: none;
         border-radius: 0.5vw;
@@ -126,11 +126,11 @@
       }
 
       .edit-btn {
-        background-color: #3182ce; // Синій фон для редагування
+        background-color: #3182ce; // Blue background for editing
       }
 
       .delete-btn {
-        background-color: #e53e3e; // Червоний фон для видалення
+        background-color: #e53e3e; // Red background for deletion
       }
 
       button:hover {

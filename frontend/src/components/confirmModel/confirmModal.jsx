@@ -11,10 +11,10 @@ const ConfirmModal = ({ isOpen, title, message, onConfirm, onCancel }) => {
 
         <div className="confirm-modal-actions">
           <button className="btn-secondary" onClick={onCancel}>
-            Скасувати
+            Cancel
           </button>
           <button className="btn-primary" onClick={onConfirm}>
-            Підтвердити
+            Confirm
           </button>
         </div>
       </div>

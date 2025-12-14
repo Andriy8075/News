@@ -24,7 +24,7 @@ const Register = () => {
     setErrors({}); // Clear previous errors
 
     if (formData.password !== formData.confirmPassword) {
-      setErrors({ confirmPassword: ['Паролі не співпадають!'] });
+      setErrors({ confirmPassword: ['Passwords do not match!'] });
       return;
     }
 
@@ -57,29 +57,29 @@ const Register = () => {
           if (errorData.errors) {
             setErrors(errorData.errors);
           } else {
-            setErrors({ general: ['Помилка валідації'] });
+            setErrors({ general: ['Validation error'] });
           }
         } else {
           console.log(response);
           console.log(JSON.stringify(response.body));
-          setErrors({ general: ['Помилка при створенні акаунту!'] });
+            setErrors({ general: ['Error creating account!'] });
         }
       }
     } catch (error) {
       console.error('Registration error:', error);
-      setErrors({ general: ['Помилка підключення до сервера'] });
+          setErrors({ general: ['Server connection error'] });
     }
   };
 
   return (
     <div className="auth">
       <div className="container">
-        <h1 className="page-title">📝 Реєстрація</h1>
+        <h1 className="page-title">📝 Registration</h1>
 
         <div className="auth-card">
           <div className="auth-header">
-            <h2>Створіть новий акаунт</h2>
-            <p>Заповніть форму нижче, щоб приєднатися</p>
+            <h2>Create a new account</h2>
+            <p>Fill out the form below to join</p>
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
@@ -90,14 +90,14 @@ const Register = () => {
             )}
 
             <div className="form-group">
-              <label htmlFor="name">Ім'я та прізвище</label>
+              <label htmlFor="name">Full name</label>
               <input
                 type="text"
                 id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Іван Петренко"
+                placeholder="John Doe"
                 required
                 className={errors.name ? 'error' : ''}
               />
@@ -109,7 +109,7 @@ const Register = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="email">Email адреса</label>
+              <label htmlFor="email">Email address</label>
               <input
                 type="email"
                 id="email"
@@ -128,14 +128,14 @@ const Register = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">Пароль</label>
+              <label htmlFor="password">Password</label>
               <input
                 type="password"
                 id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Придумайте пароль"
+                placeholder="Create a password"
                 required
                 className={errors.password ? 'error' : ''}
               />
@@ -147,14 +147,14 @@ const Register = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="confirmPassword">Підтвердження паролю</label>
+              <label htmlFor="confirmPassword">Confirm password</label>
               <input
                 type="password"
                 id="confirmPassword"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                placeholder="Повторіть пароль"
+                placeholder="Repeat password"
                 required
                 className={
                   errors.confirmPassword || errors.password_confirmation ? 'error' : ''
@@ -173,12 +173,12 @@ const Register = () => {
 
             <div className="auth-actions">
               <button type="submit" className="btn-primary">
-                Зареєструватися
+                Sign up
               </button>
 
               <div className="auth-link">
-                Вже маєте акаунт?{' '}
-                <Link to="/login">Увійти</Link>
+                Already have an account?{' '}
+                <Link to="/login">Sign in</Link>
               </div>
             </div>
           </form>

@@ -65,14 +65,14 @@ const Profile = () => {
         const responseData = await response.json();
         localStorage.setItem('user', JSON.stringify(responseData.user));
         setError('')
-        setSuccess('Дані профілю успішно змінено!')
+        setSuccess('Profile data updated successfully!')
       } else {
-        console.error('Помилка при оновленні профілю:', response.status);
-        setError('Переконайтеся, що дані введено правильно!')
+        console.error('Error updating profile:', response.status);
+        setError('Please make sure the data is entered correctly!')
       }
     } catch (error) {
-      console.error('Помилка при оновленні профілю:', error);
-      setError('Переконайтеся, що дані введено правильно!')
+      console.error('Error updating profile:', error);
+      setError('Please make sure the data is entered correctly!')
     }
   };
 
@@ -84,17 +84,17 @@ const Profile = () => {
     setSuccess('')
   
     if (newPassword === currentPassword) { 
-      setError('Пароль співпадає з старим паролем!');
+      setError('New password matches the old password!');
       formError = false;
     }
   
     if (newPassword.length < 8 || currentPassword.length < 8 || confirmPassword.length < 8) {
-      setError('Введіть пароль повністю (більше 8 символів)!');
+      setError('Please enter the full password (more than 8 characters)!');
       formError = false;
     }
   
     if (newPassword !== confirmPassword) {
-      setError('Введіть правильний підтверджувальний пароль!');
+      setError('Please enter the correct confirmation password!');
       formError = false;
     }
   
@@ -120,14 +120,14 @@ const Profile = () => {
       
         if (response.ok || response.status === 200) {
           setError('')
-          setSuccess('Пароль успішно змінено!')
+          setSuccess('Password changed successfully!')
         } else {
-          console.error('Помилка при оновленні профілю:', response.status);
-          setError('Переконайтеся, що дані введено правильно!');
+          console.error('Error updating profile:', response.status);
+          setError('Please make sure the data is entered correctly!');
         }
       } catch (error) {
-        console.error('Помилка при оновленні профілю:', error);
-        setError('Переконайтеся, що дані введено правильно!');
+        console.error('Error updating profile:', error);
+        setError('Please make sure the data is entered correctly!');
       }
   
       setUserData(prev => ({
@@ -188,21 +188,21 @@ const Profile = () => {
       });
       if (response.ok || response.status === 200) {
         setError('')
-        setSuccess('Повідомлення для підтвердження email надіслано!')
+        setSuccess('Email verification message sent!')
       } else {
-        console.error('Помилка при надсиланні повідомлення для підтвердження email:', response.status);
-        setError('Помилка при надсиланні повідомлення для підтвердження email!');
+        console.error('Error sending email verification message:', response.status);
+        setError('Error sending email verification message!');
       }
     } catch (error) {
-      console.error('Помилка при надсиланні повідомлення для підтвердження email:', error);
-      setError('Помилка при надсиланні повідомлення для підтвердження email!');
+      console.error('Error sending email verification message:', error);
+      setError('Error sending email verification message!');
     }
   };
 
   return (
     <div className="profile">
       <div className="container">
-        <h1 className="page-title">👤 Особистий кабінет</h1>
+        <h1 className="page-title">👤 Personal account</h1>
 
         <div className="profile-layout">
           <div className="profile-sidebar">
@@ -210,37 +210,37 @@ const Profile = () => {
               className={`tab-button ${activeTab === 'profile' ? 'active' : ''}`}
               onClick={() => setActiveTab('profile')}
             >
-              📝 Особиста інформація
+              📝 Personal information
             </button>
             <button
               className={`tab-button ${activeTab === 'password' ? 'active' : ''}`}
               onClick={() => setActiveTab('password')}
             >
-              🔒 Зміна паролю
+              🔒 Change password
             </button>
 
             <button
               className="tab-button"
               onClick={handleGoToMyNews}
             >
-              📰 Мої новини
+              📰 My news
             </button>
 
             <button
               className="tab-button logout-button"
               onClick={handleLogout}
             >
-              🚪 Вийти з акаунту
+              🚪 Logout
             </button>
           </div>
 
           <div className="profile-content">
             {activeTab === 'profile' && (
               <form className="profile-form" onSubmit={handleProfileSubmit}>
-                <h2>Особиста інформація</h2>
+                <h2>Personal information</h2>
 
                 <div className="form-group">
-                  <label htmlFor="name">Ім'я та прізвище</label>
+                  <label htmlFor="name">Full name</label>
                   <input
                     type="text"
                     id="name"
@@ -251,7 +251,7 @@ const Profile = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="email">Email адреса</label>
+                  <label htmlFor="email">Email address</label>
                   <input
                     type="email"
                     id="email"
@@ -279,14 +279,14 @@ const Profile = () => {
                       className="btn-primary"
                       onClick={handleSendVerificationEmail}
                     >
-                      Надіслати повідомлення для підтвердження email
+                      Send email verification message
                     </button>
                   )}
                   <button
                     type="submit"
                     className="btn-primary"
                   >
-                    Зберегти зміни
+                    Save changes
                   </button>
                 </div>
               </form>
@@ -294,41 +294,41 @@ const Profile = () => {
 
             {activeTab === 'password' && (
               <form onSubmit={handlePasswordSubmit} className="profile-form">
-                <h2>Зміна паролю</h2>
+                <h2>Change password</h2>
 
                 <div className="form-group">
-                  <label htmlFor="currentPassword">Поточний пароль</label>
+                  <label htmlFor="currentPassword">Current password</label>
                   <input
                     type="password"
                     id="currentPassword"
                     name="currentPassword"
                     value={userData.currentPassword}
                     onChange={handleChange}
-                    placeholder="Введіть поточний пароль"
+                    placeholder="Enter current password"
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="newPassword">Новий пароль</label>
+                  <label htmlFor="newPassword">New password</label>
                   <input
                     type="password"
                     id="newPassword"
                     name="newPassword"
                     value={userData.newPassword}
                     onChange={handleChange}
-                    placeholder="Введіть новий пароль"
+                    placeholder="Enter new password"
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="confirmPassword">Підтвердження паролю</label>
+                  <label htmlFor="confirmPassword">Confirm password</label>
                   <input
                     type="password"
                     id="confirmPassword"
                     name="confirmPassword"
                     value={userData.confirmPassword}
                     onChange={handleChange}
-                    placeholder="Підтвердьте новий пароль"
+                    placeholder="Confirm new password"
                   />
                 </div>
 
@@ -346,7 +346,7 @@ const Profile = () => {
                 
 
                 <button type="submit" className="btn-primary">
-                  Змінити пароль
+                  Change password
                 </button>
               </form>
             )}

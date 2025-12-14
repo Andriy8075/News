@@ -33,12 +33,12 @@ export const submitNewsForm = async (formData, endpoint, method = 'POST') => {
       const errorData = await response.json();
       throw {
         status: 422,
-        errors: errorData.errors || { general: ['Помилка валідації'] }
+        errors: errorData.errors || { general: ['Validation error'] }
       };
     } else {
       throw {
         status: response.status,
-        errors: { general: ['Помилка при збереженні новини!'] }
+        errors: { general: ['Error saving news!'] }
       };
     }
   }

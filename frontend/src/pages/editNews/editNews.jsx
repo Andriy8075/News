@@ -56,13 +56,13 @@ const EditNews = () => {
 
     try {
       await submitNewsForm(formData, `/news/${id}/update`, 'PATCH');
-      alert('Новину змінено успішно!');
+      alert('News updated successfully!');
       navigate(`/news/${id}`);
     } catch (error) {
       if (error.status === 422) {
         setErrors(error.errors);
       } else {
-        setErrors({ general: ['Помилка підключення до сервера'] });
+        setErrors({ general: ['Server connection error'] });
       }
     } finally {
       setIsSubmitting(false);
@@ -72,7 +72,7 @@ const EditNews = () => {
   return (
     <div className="create-news">
       <div className="container">
-        <h1 className="page-title">✏️ Редагувати новину</h1>
+        <h1 className="page-title">✏️ Edit news</h1>
 
         <NewsForm
           categories={categories}
@@ -89,7 +89,7 @@ const EditNews = () => {
           handleImageChange={handleImageChange}
           handleCategorySearchChange={handleCategorySearchChange}
           handleCategorySelect={handleCategorySelect}
-          submitButtonText="Зберегти зміни"
+          submitButtonText="Save changes"
         />
       </div>
     </div>

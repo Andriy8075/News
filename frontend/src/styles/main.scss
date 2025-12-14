@@ -1,4 +1,4 @@
-// Змінні
+// Variables
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --secondary-color: #f8f9fa;
@@ -11,7 +11,7 @@
   --transition: all 0.3s ease;
 }
 
-// Базові стилі
+// Base styles
 * {
   margin: 0;
   padding: 0;
@@ -39,7 +39,7 @@ body {
   margin: 0 auto;
 }
 
-// Утиліти
+// Utilities
 .btn-primary {
   background: var(--primary-gradient);
   color: white;
@@ -72,7 +72,7 @@ body {
   }
 }
 
-// Адаптивність
+// Responsive
 @media (max-width: 768px) {
   :root {
     --border-radius: 3vw;

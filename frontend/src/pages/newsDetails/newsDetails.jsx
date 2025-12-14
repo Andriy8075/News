@@ -25,8 +25,8 @@ const NewsDetail = () => {
       <div className="news-detail">
         <div className="container">
           <div className="not-found">
-            <h2>Почекайте хвилинку, шукаємо новину 😔</h2>
-            <Link to="/" className="back-link">← Повернутися на головну</Link>
+            <h2>Please wait, searching for news 😔</h2>
+            <Link to="/" className="back-link">← Back to home</Link>
           </div>
         </div>
       </div>
@@ -36,14 +36,14 @@ const NewsDetail = () => {
   return (
     <div className="news-detail">
       <div className="container">
-        <Link to="/" className="back-link">← Повернутися до всіх новин</Link>
+        <Link to="/" className="back-link">← Back to all news</Link>
         
         <article className="news-article">
           <header className="news-header">
             <div className="news-meta">
               <span className="category">{news.category}</span>
               <span className="date">
-                📅 {new Date(news.date).toLocaleDateString('uk-UA')}
+                📅 {new Date(news.date).toLocaleDateString('en-US')}
               </span>
             </div>
             
@@ -52,8 +52,8 @@ const NewsDetail = () => {
             <div className="author-info">
               <span className="author">👤 {news.author}</span>
               <div className="stats">
-                <span className="views">👁️ {news.views} переглядів</span>
-                <span className="likes">❤️ {news.likes} вподобайок</span>
+                <span className="views">👁️ {news.views} views</span>
+                <span className="likes">❤️ {news.likes} likes</span>
               </div>
             </div>
           </header>

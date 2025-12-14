@@ -16,8 +16,8 @@ const NewsForm = ({
   handleImageChange,
   handleCategorySearchChange,
   handleCategorySelect,
-  submitButtonText = 'Опублікувати новину',
-  cancelButtonText = 'Скасувати',
+  submitButtonText = 'Publish news',
+  cancelButtonText = 'Cancel',
 }) => {
   const categoryDropdownRef = useRef(null);
 
@@ -47,14 +47,14 @@ const NewsForm = ({
       )}
 
       <div className="form-group">
-        <label htmlFor="title">Заголовок *</label>
+        <label htmlFor="title">Title *</label>
         <input
           type="text"
           id="title"
           name="title"
           value={formData.title}
           onChange={handleChange}
-          placeholder="Введіть заголовок новини"
+          placeholder="Enter news title"
           required
           className={errors.title ? 'error' : ''}
         />
@@ -66,13 +66,13 @@ const NewsForm = ({
       </div>
 
       <div className="form-group">
-        <label htmlFor="excerpt">Короткий опис *</label>
+        <label htmlFor="excerpt">Excerpt *</label>
         <textarea
           id="excerpt"
           name="excerpt"
           value={formData.excerpt}
           onChange={handleChange}
-          placeholder="Короткий опис новини"
+          placeholder="News excerpt"
           rows="3"
           required
           className={errors.excerpt ? 'error' : ''}
@@ -85,13 +85,13 @@ const NewsForm = ({
       </div>
 
       <div className="form-group">
-        <label htmlFor="content">Повний текст *</label>
+        <label htmlFor="content">Full text *</label>
         <textarea
           id="content"
           name="content"
           value={formData.content}
           onChange={handleChange}
-          placeholder="Повний текст новини"
+          placeholder="Full news text"
           rows="10"
           required
           className={errors.content ? 'error' : ''}
@@ -105,7 +105,7 @@ const NewsForm = ({
 
       <div className="form-row">
         <div className="form-group category-search-group">
-          <label htmlFor="category">Категорія</label>
+          <label htmlFor="category">Category</label>
           <div className="category-search-wrapper" ref={categoryDropdownRef}>
             <input
               type="text"
@@ -114,12 +114,12 @@ const NewsForm = ({
               value={categorySearchTerm}
               onChange={handleCategorySearchChange}
               onFocus={() => setShowCategoryDropdown(true)}
-              placeholder="Введіть назву категорії..."
+              placeholder="Enter category name..."
               className={errors.category ? 'error' : ''}
               autoComplete="off"
             />
             {isSearchingCategories && (
-              <div className="category-search-loading">Пошук...</div>
+              <div className="category-search-loading">Searching...</div>
             )}
             {showCategoryDropdown && categories.length > 0 && (
               <div className="category-dropdown">
@@ -143,7 +143,7 @@ const NewsForm = ({
         </div>
 
         <div className="form-group">
-          <label htmlFor="image">Зображення</label>
+          <label htmlFor="image">Image</label>
           <input
             type="file"
             id="image"
@@ -153,21 +153,21 @@ const NewsForm = ({
           />
           {formData.imagePreview && (
             <div className="image-preview">
-              <img src={formData.imagePreview} alt="Превʼю" />
+              <img src={formData.imagePreview} alt="Preview" />
             </div>
           )}
         </div>
       </div>
 
       <div className="form-group">
-        <label htmlFor="tags">Теги (через кому)</label>
+        <label htmlFor="tags">Tags (comma-separated)</label>
         <input
           type="text"
           id="tags"
           name="tags"
           value={formData.tags}
           onChange={handleChange}
-          placeholder="технології, новини, Україна"
+          placeholder="technology, news, world"
         />
       </div>
 
@@ -180,7 +180,7 @@ const NewsForm = ({
           {cancelButtonText}
         </button>
         <button type="submit" className="btn-primary" disabled={isSubmitting}>
-          {isSubmitting ? 'Публікація...' : submitButtonText}
+          {isSubmitting ? 'Publishing...' : submitButtonText}
         </button>
       </div>
     </form>
